@@ -20,7 +20,7 @@
       width: 100%;
       padding: 1rem 2rem;
       display: flex;
-      justify-content: space-between;
+      flex-direction: row;
       align-items: center;
       background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(10px);
@@ -32,6 +32,10 @@
       font-weight: bold;
     }
 
+    nav {
+      margin-left: auto;
+    }
+    
     nav a {
       color: white;
       margin-left: 2rem;
@@ -62,6 +66,7 @@
 
     h2 {
       background: linear-gradient(90deg, cyan, magenta);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
