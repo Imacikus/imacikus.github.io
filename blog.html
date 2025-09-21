@@ -30,13 +30,20 @@
     header h1 {
       font-size: 1.5rem;
       font-weight: bold;
+      white-space: nowrap; /* verhindert Zeilenumbruch */
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem; /* Abstand zwischen Links */
     }
 
     nav a {
       color: white;
-      margin-left: 2rem;
       text-decoration: none;
       position: relative;
+      font-size: 1rem;
+      white-space: nowrap; /* Links bleiben in einer Reihe */
     }
 
     nav a::after {
