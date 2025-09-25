@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Über mich</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f0f0f, #1f1f1f);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      position: relative;
+      font-size: 1rem;
+      white-space: nowrap;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0%;
+      height: 2px;
+      background: cyan;
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 7rem auto 2rem auto;
+      padding: 0 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .image-container {
+      flex: 1 1 250px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .image-container img {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+      transition: transform 0.3s ease;
+    }
+
+    .image-container img:hover {
+      transform: scale(1.05);
+    }
+
+    .text-container {
+      flex: 2 1 300px;
+    }
+
+    .text-container h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, cyan, magenta);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .text-container p {
+      line-height: 1.6;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Über mich</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="image-container">
+      <img src="dein-bild.jpg" alt="Bild von mir">
+    </div>
+    <div class="text-container">
+      <h2>Hi, ich bin [Dein Name] 👋</h2>
+      <p>
+        Hier kannst du etwas über dich erzählen! Zum Beispiel: Wer du bist, was du machst, 
+        welche Interessen du hast, welche Projekte du schon umgesetzt hast oder warum du 
+        diese Website erstellt hast.
+      </p>
+      <p>
+        Schreibe ruhig ein bisschen mehr, damit Besucher ein Gefühl dafür bekommen, 
+        wer du bist. Du kannst auch über deine Skills sprechen (z. B. HTML, CSS, JavaScript, 
+        3D-Druck, Linux) oder zukünftige Projekte, die du umsetzen möchtest.
+      </p>
+    </div>
+  </main>
+</body>
+</html>
