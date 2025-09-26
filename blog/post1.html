@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MI Band 9 + Gadgetbridge</title>
-  <!-- Verweis auf deine zentrale CSS-Datei -->
   <link rel="stylesheet" href="/blog/blog_style.css">
 </head>
 <body>
@@ -17,8 +16,34 @@
   </header>
 
   <main>
-    <h2>So verbindet man das MI Band 9 mit Gadgetbridge</h2>
-    <p>text</p>
+    <h2>MI Band 9 mit Gadgetbridge verbinden – Schritt-für-Schritt</h2>
+
+    <p>Mit dieser Anleitung kannst du dein MiBand9 lokal, datenschutzfreundlich und ohne Cloud nutzen.</p>
+
+    <p><strong>1. Xiaomi-App installieren:</strong> Mi Fitness / Mi Health / Xiaomi Wear</p>
+    <p><strong>2. MiBand koppeln:</strong> dadurch wird ein Key erstellt</p>
+    <p><strong>3. Computer vorbereiten:</strong> adb (Android Debugging Bridge) installieren</p>
+    <p><strong>4. USB-Debugging aktivieren:</strong> auf dem Smartphone einschalten</p>
+    <p><strong>5. Smartphone verbinden:</strong> per USB mit dem Computer</p>
+    <p><strong>6. Key auslesen:</strong></p>
+
+    <div class="code-container">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre id="adbCode">
+adb shell
+grep -Eo '(encryptKey|token|authKey|huamiAuthKey)[":= ]+[[:xdigit:]]{32}' /sdcard/Android/data/{com.xiaomi.wearable,com.mi.health}/files/log/*.log | grep -oE '[[:xdigit:]]{32}' | sort | uniq
+      </pre>
+    </div>
+    <p>Den langen Code kopieren</p>
+
+    <p>7. Bluetooth aus, Xiaomi-App deinstallieren, Bluetooth wieder einschalten</p>
+    <p>8. Gadgetbridge starten, Gerät verbinden und Key eingeben</p>
+    <p>9. Fertig: MiBand funktioniert lokal und datenschutzfreundlich</p>
+
+    <p><strong>Tipp:</strong> Für Outdoor-Sport GPS Timeout erhöhen, externe Apps wie OpenTracks einbinden für genauere Aufzeichnungen.</p>
+
+    <button class="cta" onclick="window.location.href='https://f-droid.org/packages/nodomain.freeyourgadget.gadgetbridge/'">Gadgetbridge auf F-Droid herunterladen</button>
+
   </main>
 
   <footer>
@@ -32,5 +57,15 @@
       </nav>
     </div>
   </footer>
+
+  <script>
+    function copyCode(button) {
+      const code = button.nextElementSibling.textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        button.textContent = 'Copied!';
+        setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+      });
+    }
+  </script>
 </body>
 </html>
