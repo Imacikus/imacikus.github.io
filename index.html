@@ -34,5 +34,11 @@
     </nav>
   </div>
 </footer>
+<script>
+  const page = location.pathname.split('/').pop();
+  const visits = JSON.parse(localStorage.getItem('pageVisits') || '{}');
+  visits[page] = (visits[page] || 0) + 1;
+  localStorage.setItem('pageVisits', JSON.stringify(visits));
+</script>
 
 </html>

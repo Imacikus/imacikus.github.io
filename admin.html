@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style/style.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f0f0f, #1f1f1f);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: cyan;
+      margin-bottom: 1rem;
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid cyan;
+      color: white;
+      padding: 0.7rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background: cyan;
+      border: none;
+      color: black;
+      font-weight: bold;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: magenta;
+      color: white;
+    }
+
+    .posts-list {
+      margin-top: 1rem;
+      border-top: 1px solid cyan;
+      padding-top: 1rem;
+    }
+
+    .visit-list {
+      border-top: 1px solid cyan;
+      padding-top: 1rem;
+    }
+
+    .visit-list li {
+      margin-bottom: 0.3rem;
+      opacity: 0.8;
+    }
+
+    textarea {
+      min-height: 150px;
+    }
+
+    footer {
+      text-align: center;
+      opacity: 0.6;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Admin Dashboard</h1>
+
+  <section>
+    <h2>📊 Seitenaufrufe</h2>
+    <ul class="visit-list" id="visits"></ul>
+    <button id="resetVisits">Statistik zurücksetzen</button>
+  </section>
+
+  <section>
+    <h2>📝 Neuen Blogpost erstellen</h2>
+    <input type="text" id="title" placeholder="Titel des Blogposts">
+    <textarea id="content" placeholder="Inhalt des Blogposts (HTML erlaubt)"></textarea>
+    <button id="createPost">Blogpost erstellen (Download)</button>
+
+    <div class="posts-list" id="postsList"></div>
+  </section>
+
+  <footer>
+    © 2025 – Lokales Admin-Tool (funktioniert nur im Browser, nicht auf Server)
+  </footer>
+
+  <script>
+    // ---- Seitenaufrufe aus localStorage anzeigen ----
+    const visitsList = document.getElementById('visits');
+    const visits = JSON.parse(localStorage.getItem('pageVisits') || '{}');
+    if (Object.keys(visits).length === 0) {
+      visitsList.innerHTML = '<li>Noch keine Seitenaufrufe gespeichert</li>';
+    } else {
+      for (const [page, count] of Object.entries(visits)) {
+        const li = document.createElement('li');
+        li.textContent = `${page}: ${count} Aufrufe`;
+        visitsList.appendChild(li);
+      }
+    }
+
+    document.getElementById('resetVisits').addEventListener('click', () => {
+      localStorage.removeItem('pageVisits');
+      alert('Statistik zurückgesetzt');
+      location.reload();
+    });
+
+    // ---- Blogpost erstellen und als Download anbieten ----
+    document.getElementById('createPost').addEventListener('click', () => {
+      const title = document.getElementById('title').value.trim();
+      const content = document.getElementById('content').value.trim();
+      if (!title || !content) {
+        alert('Bitte Titel und Inhalt ausfüllen!');
+        return;
+      }
+
+      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+      const html = `<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+  <header>
+    <h1>Blog</h1>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../blog.html">← Zurück zum Blog</a>
+    </nav>
+  </header>
+  <main>
+    <h2>${title}</h2>
+    <p>${content}</p>
+  </main>
+  <footer>
+    <div class="footer-container">
+      <p>© 2025 Dein Name – Alle Rechte vorbehalten</p>
+      <nav>
+        <a href="../blog.html">Blog</a>
+        <a href="../about.html">Über mich</a>
+        <a href="../impressum.html">Impressum</a>
+        <a href="../datenschutz.html">Datenschutz</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>`;
+
+      const blob = new Blob([html], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = slug + ".html";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // ---- Posts lokal speichern (optional) ----
+    const savedPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+    const postsList = document.getElementById('postsList');
+    if (savedPosts.length > 0) {
+      postsList.innerHTML = '<h3>Gespeicherte Posts (lokal)</h3>' +
+        savedPosts.map(p => `<div>📝 ${p.title}</div>`).join('');
+    }
+  </script>
+</body>
+</html>
