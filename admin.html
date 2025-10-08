@@ -135,23 +135,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title}</title>
-  <link rel="stylesheet" href="../style/style.css">
+  <!-- Verweis auf deine zentrale CSS-Datei -->
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
   <header>
-    <h1>Blog</h1>
+    <h1>${title}</h1>
     <nav>
       <a href="../index.html">Home</a>
       <a href="../blog.html">← Zurück zum Blog</a>
     </nav>
   </header>
+
   <main>
     <h2>${title}</h2>
     <p>${content}</p>
   </main>
+
   <footer>
     <div class="footer-container">
-      <p>© 2025 Dein Name – Alle Rechte vorbehalten</p>
+      <p>© 2025 Imacikus – Alle Rechte vorbehalten</p>
       <nav>
         <a href="../blog.html">Blog</a>
         <a href="../about.html">Über mich</a>
@@ -179,6 +182,10 @@
       postsList.innerHTML = '<h3>Gespeicherte Posts (lokal)</h3>' +
         savedPosts.map(p => `<div>📝 ${p.title}</div>`).join('');
     }
+    const pw = prompt("Passwort eingeben:");
+    if (pw !== "meinGeheimesPasswort123") {
+    document.body.innerHTML = "<h1>Zugriff verweigert 🚫</h1>";
+  }
   </script>
 </body>
 </html>
