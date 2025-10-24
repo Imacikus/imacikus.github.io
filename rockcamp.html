@@ -1,53 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown Timer</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            font-size: 2em;
-        }
-        #countdown {
-            margin-bottom: 20px;
-        }
-        img {
-            max-width: 200px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timer</title>
+  <style>
+    /* Grunddesign */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      background: linear-gradient(135deg, #0f0f0f, #1f1f1f);
+      overflow: hidden;
+      color: white;
+    }
+
+    /* Animierter Hintergrund (Neon Pulse) */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(0,255,255,0.15), transparent 60%),
+                  radial-gradient(circle at 80% 20%, rgba(255,0,255,0.1), transparent 50%),
+                  radial-gradient(circle at 20% 80%, rgba(0,255,150,0.1), transparent 50%);
+      animation: moveBackground 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes moveBackground {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(-10%, -10%); }
+      100% { transform: translate(0, 0); }
+    }
+
+    /* Container */
+    .container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Countdown-Anzeige */
+    #countdown {
+      font-size: 5rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, cyan, magenta);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0,255,255,0.3);
+      margin-bottom: 2rem;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    /* QR Code mit Glow */
+    img {
+      max-width: 180px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0,255,255,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(0,255,255,0.7);
+    }
+
+    /* Titel / Header */
+    h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, cyan, magenta);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      opacity: 0.9;
+      letter-spacing: 1px;
+      animation: fadeIn 1.5s ease forwards;
+    }
+
+    /* Subtext */
+    p {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      opacity: 0.7;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    /* Button-Style */
+    .cta {
+      margin-top: 2rem;
+      padding: 0.8rem 2rem;
+      border: 2px solid cyan;
+      border-radius: 25px;
+      background: transparent;
+      color: cyan;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      animation: fadeIn 2.5s ease forwards;
+    }
+
+    .cta:hover {
+      background: cyan;
+      color: black;
+      box-shadow: 0 0 20px cyan;
+    }
+
+    /* Fade-In Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-    <div id="countdown"></div>
+  <div class="container">
+    <h1>Countdown bis 15:00 Uhr</h1>
+    <div id="countdown">--:--:--</div>
     <img src="qr.png" alt="QR Code">
+    <p>Scanne den Code für mehr Infos</p>
+    <button class="cta" onclick="window.location.reload()">Neu laden</button>
+  </div>
 
-    <script>
-        function updateCountdown() {
-            const now = new Date();
-            const target = new Date();
-            target.setHours(15, 0, 0, 0);
-            
-            if (now > target) {
-                target.setDate(target.getDate() + 1);
-            }
+  <script>
+    function updateCountdown() {
+      const now = new Date();
+      const target = new Date();
+      target.setHours(15, 0, 0, 0);
 
-            const diff = target - now;
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      if (now > target) target.setDate(target.getDate() + 1);
 
-            document.getElementById('countdown').innerHTML = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
+      const diff = target - now;
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-    </script>
+      document.getElementById('countdown').innerHTML =
+        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
 </body>
 </html>
