@@ -65,17 +65,17 @@
       animation: fadeIn 1s ease forwards;
     }
 
-    /* QR Code mit Glow */
+    /* QR Code größer + stärkerer Glow */
     img {
-      max-width: 180px;
+      max-width: 300px; /* vorher 180px */
       border-radius: 20px;
-      box-shadow: 0 0 25px rgba(0,255,255,0.4);
+      box-shadow: 0 0 40px rgba(0,255,255,0.5);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px rgba(0,255,255,0.7);
+      transform: scale(1.08);
+      box-shadow: 0 0 60px rgba(0,255,255,0.8);
     }
 
     /* Titel / Header */
