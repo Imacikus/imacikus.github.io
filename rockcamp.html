@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            font-size: 2em;
+        }
+        #countdown {
+            margin-bottom: 20px;
+        }
+        img {
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="countdown"></div>
+    <img src="qr.png" alt="QR Code">
+
+    <script>
+        function updateCountdown() {
+            const now = new Date();
+            const target = new Date();
+            target.setHours(15, 0, 0, 0);
+            
+            if (now > target) {
+                target.setDate(target.getDate() + 1);
+            }
+
+            const diff = target - now;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
