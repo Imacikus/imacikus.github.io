@@ -53,37 +53,51 @@
       padding: 1rem;
     }
 
-    /* Countdown-Anzeige */
+    /* Countdown-Boxen */
     #countdown {
-      font-size: 5rem;
-      font-weight: 600;
-      letter-spacing: 2px;
-      background: linear-gradient(90deg, cyan, magenta);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(0,255,255,0.3);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
       margin-bottom: 2rem;
       animation: fadeIn 1s ease forwards;
     }
 
-    /* QR Code größer + stärkerer Glow */
-    img {
-      max-width: 300px;
-      border-radius: 20px;
-      box-shadow: 0 0 40px rgba(0,255,255,0.5);
+    .time-box {
+      background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(0,255,255,0.5);
+      border-radius: 15px;
+      padding: 1rem 1.5rem;
+      min-width: 100px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.3);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    img:hover {
+    .time-box:hover {
       transform: scale(1.08);
-      box-shadow: 0 0 60px rgba(0,255,255,0.8);
+      box-shadow: 0 0 30px rgba(0,255,255,0.6);
+    }
+
+    .time-value {
+      font-size: 2rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, cyan, magenta);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0,255,255,0.3);
+    }
+
+    .time-label {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-top: 0.3rem;
     }
 
     /* Titel / Header */
     h1 {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: bold;
-      margin-bottom: 1rem;
+      margin-bottom: 2rem;
       background: linear-gradient(90deg, cyan, magenta);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -144,32 +158,54 @@
 </head>
 <body>
   <div class="container">
-    <h1>Countdown bis 15:00 Uhr</h1>
-    <div id="countdown">--:--:--</div>
-    <img src="qr.png" alt="QR Code">
-    <p>Scanne den Code für mehr Infos</p>
+    <h1>Countdown bis zum nächsten Rockcamp</h1>
+
+    <div id="countdown">
+      <div class="time-box"><div class="time-value">--</div><div class="time-label">Monate</div></div>
+      <div class="time-box"><div class="time-value">--</div><div class="time-label">Wochen</div></div>
+      <div class="time-box"><div class="time-value">--</div><div class="time-label">Tage</div></div>
+      <div class="time-box"><div class="time-value">--</div><div class="time-label">Stunden</div></div>
+      <div class="time-box"><div class="time-value">--</div><div class="time-label">Minuten</div></div>
+      <div class="time-box"><div class="time-value">--</div><div class="time-label">Sekunden</div></div>
+    </div>
+
     <button class="cta" onclick="window.location.reload()">Neu laden</button>
+
     <div class="footer-note">
       Wenn ihr den Countdown auf eurem Handy sehen wollt:<br>
-      <span>imacikus.github.io/rockcamp.html</span>
+      <span><a href="https://imacikus.github.io/rockcamp.html" style="color: cyan; text-decoration: none;">imacikus.github.io/rockcamp.html</a></span>
     </div>
   </div>
 
   <script>
     function updateCountdown() {
       const now = new Date();
-      const target = new Date();
-      target.setHours(15, 0, 0, 0);
+      const target = new Date('2026-10-19T00:00:00');
+      let diff = target - now;
 
-      if (now > target) target.setDate(target.getDate() + 1);
+      if (diff <= 0) {
+        document.getElementById('countdown').innerHTML = "🎉 Heute ist Rockcamp! 🎉";
+        return;
+      }
 
-      const diff = target - now;
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      const seconds = Math.floor(diff / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      const weeks = Math.floor(days / 7);
+      const months = Math.floor(days / 30.44);
 
-      document.getElementById('countdown').innerHTML =
-        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      const remDays = days % 30;
+      const remHours = hours % 24;
+      const remMinutes = minutes % 60;
+      const remSeconds = seconds % 60;
+
+      const values = [months, weeks, remDays, remHours, remMinutes, remSeconds];
+      const boxes = document.querySelectorAll('.time-box .time-value');
+
+      boxes.forEach((box, i) => {
+        box.textContent = values[i].toString().padStart(2, '0');
+      });
     }
 
     updateCountdown();
