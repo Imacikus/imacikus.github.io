@@ -18,17 +18,18 @@
       background: linear-gradient(135deg, #0f0f0f, #1f1f1f);
       overflow: hidden;
       color: white;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* Animierter Hintergrund (Neon Pulse) */
+    /* Animierter Hintergrund */
     body::before {
       content: "";
       position: absolute;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle at center, rgba(0,255,255,0.15), transparent 60%),
-                  radial-gradient(circle at 80% 20%, rgba(255,0,255,0.1), transparent 50%),
-                  radial-gradient(circle at 20% 80%, rgba(0,255,150,0.1), transparent 50%);
+      background: radial-gradient(circle at center, rgba(0,255,255,0.12), transparent 60%),
+                  radial-gradient(circle at 80% 20%, rgba(255,0,255,0.08), transparent 50%),
+                  radial-gradient(circle at 20% 80%, rgba(0,255,150,0.08), transparent 50%);
       animation: moveBackground 20s linear infinite;
       z-index: 0;
     }
@@ -53,7 +54,20 @@
       padding: 1rem;
     }
 
-    /* Countdown-Boxen */
+    /* Titel */
+    h1 {
+      font-size: clamp(1.2rem, 5vw, 2rem);
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, cyan, magenta);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+      animation: fadeIn 1.5s ease forwards;
+      text-align: center;
+    }
+
+    /* Countdown */
     #countdown {
       display: flex;
       flex-wrap: wrap;
@@ -61,55 +75,43 @@
       gap: 1rem;
       margin-bottom: 2rem;
       animation: fadeIn 1s ease forwards;
+      max-width: 95%;
     }
 
     .time-box {
       background: rgba(255,255,255,0.05);
-      border: 2px solid rgba(0,255,255,0.5);
+      border: 2px solid rgba(0,255,255,0.4);
       border-radius: 15px;
       padding: 1rem 1.5rem;
-      min-width: 100px;
-      box-shadow: 0 0 20px rgba(0,255,255,0.3);
+      min-width: 90px;
+      box-shadow: 0 0 15px rgba(0,255,255,0.25);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .time-box:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 30px rgba(0,255,255,0.6);
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0,255,255,0.6);
     }
 
     .time-value {
-      font-size: 2rem;
+      font-size: clamp(1.5rem, 5vw, 2rem);
       font-weight: bold;
       background: linear-gradient(90deg, cyan, magenta);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(0,255,255,0.3);
+      text-shadow: 0 0 15px rgba(0,255,255,0.3);
     }
 
     .time-label {
-      font-size: 0.9rem;
+      font-size: clamp(0.7rem, 3vw, 0.9rem);
       opacity: 0.8;
       margin-top: 0.3rem;
     }
 
-    /* Titel / Header */
-    h1 {
-      font-size: 1.8rem;
-      font-weight: bold;
-      margin-bottom: 2rem;
-      background: linear-gradient(90deg, cyan, magenta);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      opacity: 0.9;
-      letter-spacing: 1px;
-      animation: fadeIn 1.5s ease forwards;
-    }
-
-    /* Button-Style */
+    /* Button */
     .cta {
-      margin-top: 2rem;
-      padding: 0.8rem 2rem;
+      margin-top: 1rem;
+      padding: 0.7rem 2rem;
       border: 2px solid cyan;
       border-radius: 25px;
       background: transparent;
@@ -123,16 +125,19 @@
     .cta:hover {
       background: cyan;
       color: black;
-      box-shadow: 0 0 20px cyan;
+      box-shadow: 0 0 15px cyan;
     }
 
-    /* Hinweiszeile unten über dem Footer */
+    /* Hinweis */
     .footer-note {
-      margin-top: 2rem;
-      font-size: 1rem;
-      opacity: 0.7;
+      margin-top: 1.5rem;
+      font-size: clamp(0.8rem, 3vw, 1rem);
+      opacity: 0.8;
       color: #ccc;
       animation: fadeIn 3s ease forwards;
+      text-align: center;
+      line-height: 1.4;
+      word-break: break-word;
     }
 
     .footer-note span {
@@ -147,7 +152,7 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      padding: 1rem 2rem;
+      padding: 0.8rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -155,24 +160,47 @@
       backdrop-filter: blur(8px);
       border-top: 1px solid rgba(0,255,255,0.2);
       z-index: 3;
-      animation: fadeIn 3s ease forwards;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
     footer p {
-      font-size: 0.9rem;
+      font-size: clamp(0.7rem, 2.5vw, 0.9rem);
       color: #aaa;
       opacity: 0.8;
     }
 
     footer img {
-      height: 35px;
-      filter: drop-shadow(0 0 10px cyan);
+      height: clamp(25px, 6vw, 40px);
+      filter: drop-shadow(0 0 8px cyan);
       transition: transform 0.3s ease, filter 0.3s ease;
     }
 
     footer img:hover {
       transform: scale(1.1);
-      filter: drop-shadow(0 0 20px magenta);
+      filter: drop-shadow(0 0 15px magenta);
+    }
+
+    /* Mobile Anpassung */
+    @media (max-width: 600px) {
+      .time-box {
+        min-width: 70px;
+        padding: 0.8rem;
+      }
+
+      .container {
+        padding: 0.5rem;
+        height: 88vh;
+      }
+
+      footer {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      footer img {
+        margin-top: 0.3rem;
+      }
     }
 
     /* Fade-In Animation */
