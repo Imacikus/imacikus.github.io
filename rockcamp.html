@@ -143,8 +143,9 @@
       animation: fadeIn 3s ease forwards;
     }
 
-    .footer-note span {
+    .footer-note span a {
       color: cyan;
+      text-decoration: none;
       font-weight: bold;
       text-shadow: 0 0 10px rgba(0,255,255,0.6);
     }
@@ -154,6 +155,12 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    /* Responsive: auf engen Bildschirmen zwei Reihen */
+    @media (max-width: 520px) {
+      .time-box { min-width: 44%; }
+      .time-value { font-size: 1.6rem; }
+    }
   </style>
 </head>
 <body>
@@ -162,7 +169,6 @@
 
     <div id="countdown">
       <div class="time-box"><div class="time-value">--</div><div class="time-label">Monate</div></div>
-      <div class="time-box"><div class="time-value">--</div><div class="time-label">Wochen</div></div>
       <div class="time-box"><div class="time-value">--</div><div class="time-label">Tage</div></div>
       <div class="time-box"><div class="time-value">--</div><div class="time-label">Stunden</div></div>
       <div class="time-box"><div class="time-value">--</div><div class="time-label">Minuten</div></div>
@@ -173,38 +179,55 @@
 
     <div class="footer-note">
       Wenn ihr den Countdown auf eurem Handy sehen wollt:<br>
-      <span><a href="https://imacikus.github.io/rockcamp.html" style="color: cyan; text-decoration: none;">imacikus.github.io/rockcamp.html</a></span>
+      <span><a href="https://imacikus.github.io/rockcamp.html">imacikus.github.io/rockcamp.html</a></span>
     </div>
   </div>
 
   <script>
+    const target = new Date('2026-10-19T00:00:00');
+
+    function calcMonthsAndRemainder(from, to) {
+      // Volle Monate zwischen from und to
+      let months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
+      // Erstelle Kandidat-Start + months
+      let candidate = new Date(from.getTime());
+      candidate.setMonth(candidate.getMonth() + months);
+
+      // Falls candidate > to, einen Monat zurück
+      if (candidate > to) {
+        months--;
+        candidate = new Date(from.getTime());
+        candidate.setMonth(candidate.getMonth() + months);
+      }
+
+      return { months, remainderStart: candidate }; // remainderStart ist der Zeitpunkt nach Abzug der vollen Monate
+    }
+
     function updateCountdown() {
       const now = new Date();
-      const target = new Date('2026-10-19T00:00:00');
-      let diff = target - now;
-
-      if (diff <= 0) {
+      if (now >= target) {
         document.getElementById('countdown').innerHTML = "🎉 Heute ist Rockcamp! 🎉";
         return;
       }
 
-      const seconds = Math.floor(diff / 1000);
-      const minutes = Math.floor(seconds / 60);
-      const hours = Math.floor(minutes / 60);
-      const days = Math.floor(hours / 24);
-      const weeks = Math.floor(days / 7);
-      const months = Math.floor(days / 30.44);
+      // Monate berechnen und Restzeit ab dem Punkt nach den vollen Monaten
+      const { months, remainderStart } = calcMonthsAndRemainder(now, target);
+      const remMs = target - remainderStart;
 
-      const remDays = days % 30;
-      const remHours = hours % 24;
-      const remMinutes = minutes % 60;
-      const remSeconds = seconds % 60;
+      // Jetzt Tage / Stunden / Minuten / Sekunden aus remMs
+      let rem = Math.floor(remMs / 1000);
+      const sec = rem % 60;
+      rem = Math.floor(rem / 60);
+      const min = rem % 60;
+      rem = Math.floor(rem / 60);
+      const hrs = rem % 24;
+      const days = Math.floor(rem / 24);
 
-      const values = [months, weeks, remDays, remHours, remMinutes, remSeconds];
+      const values = [months, days, hrs, min, sec];
+
       const boxes = document.querySelectorAll('.time-box .time-value');
-
       boxes.forEach((box, i) => {
-        box.textContent = values[i].toString().padStart(2, '0');
+        box.textContent = String(values[i]).padStart(2, '0');
       });
     }
 
