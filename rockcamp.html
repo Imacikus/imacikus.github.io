@@ -47,7 +47,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      height: 90vh;
       text-align: center;
       backdrop-filter: blur(10px);
       padding: 1rem;
@@ -106,14 +106,6 @@
       animation: fadeIn 1.5s ease forwards;
     }
 
-    /* Subtext */
-    p {
-      margin-top: 1rem;
-      font-size: 1.2rem;
-      opacity: 0.7;
-      animation: fadeIn 2s ease forwards;
-    }
-
     /* Button-Style */
     .cta {
       margin-top: 2rem;
@@ -134,7 +126,7 @@
       box-shadow: 0 0 20px cyan;
     }
 
-    /* Hinweiszeile unten */
+    /* Hinweiszeile unten über dem Footer */
     .footer-note {
       margin-top: 2rem;
       font-size: 1rem;
@@ -143,23 +135,50 @@
       animation: fadeIn 3s ease forwards;
     }
 
-    .footer-note span a {
+    .footer-note span {
       color: cyan;
-      text-decoration: none;
       font-weight: bold;
       text-shadow: 0 0 10px rgba(0,255,255,0.6);
+    }
+
+    /* Footer */
+    footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(0,255,255,0.2);
+      z-index: 3;
+      animation: fadeIn 3s ease forwards;
+    }
+
+    footer p {
+      font-size: 0.9rem;
+      color: #aaa;
+      opacity: 0.8;
+    }
+
+    footer img {
+      height: 35px;
+      filter: drop-shadow(0 0 10px cyan);
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    footer img:hover {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 20px magenta);
     }
 
     /* Fade-In Animation */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Responsive: auf engen Bildschirmen zwei Reihen */
-    @media (max-width: 520px) {
-      .time-box { min-width: 44%; }
-      .time-value { font-size: 1.6rem; }
     }
   </style>
 </head>
@@ -179,55 +198,42 @@
 
     <div class="footer-note">
       Wenn ihr den Countdown auf eurem Handy sehen wollt:<br>
-      <span><a href="https://imacikus.github.io/rockcamp.html">imacikus.github.io/rockcamp.html</a></span>
+      <span><a href="https://imacikus.github.io/rockcamp.html" style="color: cyan; text-decoration: none;">imacikus.github.io/rockcamp.html</a></span>
     </div>
   </div>
 
+  <footer>
+    <p>© 2025 All rights reserved</p>
+    <img src="pegasus_logo.png" alt="Pegasus Logo">
+  </footer>
+
   <script>
-    const target = new Date('2026-10-19T00:00:00');
-
-    function calcMonthsAndRemainder(from, to) {
-      // Volle Monate zwischen from und to
-      let months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
-      // Erstelle Kandidat-Start + months
-      let candidate = new Date(from.getTime());
-      candidate.setMonth(candidate.getMonth() + months);
-
-      // Falls candidate > to, einen Monat zurück
-      if (candidate > to) {
-        months--;
-        candidate = new Date(from.getTime());
-        candidate.setMonth(candidate.getMonth() + months);
-      }
-
-      return { months, remainderStart: candidate }; // remainderStart ist der Zeitpunkt nach Abzug der vollen Monate
-    }
-
     function updateCountdown() {
       const now = new Date();
-      if (now >= target) {
+      const target = new Date('2026-10-18T13:59:20');
+      let diff = target - now;
+
+      if (diff <= 0) {
         document.getElementById('countdown').innerHTML = "🎉 Heute ist Rockcamp! 🎉";
         return;
       }
 
-      // Monate berechnen und Restzeit ab dem Punkt nach den vollen Monaten
-      const { months, remainderStart } = calcMonthsAndRemainder(now, target);
-      const remMs = target - remainderStart;
+      const seconds = Math.floor(diff / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      const months = Math.floor(days / 30.44);
 
-      // Jetzt Tage / Stunden / Minuten / Sekunden aus remMs
-      let rem = Math.floor(remMs / 1000);
-      const sec = rem % 60;
-      rem = Math.floor(rem / 60);
-      const min = rem % 60;
-      rem = Math.floor(rem / 60);
-      const hrs = rem % 24;
-      const days = Math.floor(rem / 24);
+      const remDays = Math.floor(days % 30.44);
+      const remHours = hours % 24;
+      const remMinutes = minutes % 60;
+      const remSeconds = seconds % 60;
 
-      const values = [months, days, hrs, min, sec];
-
+      const values = [months, remDays, remHours, remMinutes, remSeconds];
       const boxes = document.querySelectorAll('.time-box .time-value');
+
       boxes.forEach((box, i) => {
-        box.textContent = String(values[i]).padStart(2, '0');
+        box.textContent = values[i].toString().padStart(2, '0');
       });
     }
 
