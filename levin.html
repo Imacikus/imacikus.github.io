@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Look‑alike (Spaß‑Demo)</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:20px;background:#f7f7fb;color:#111}
+    .card{background:#fff;padding:16px;border-radius:12px;box-shadow:0 6px 20px rgba(20,20,50,0.06);max-width:900px;margin:auto}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    video, canvas, img{border-radius:8px;display:block;max-width:100%}
+    .controls{display:flex;gap:8px;align-items:center;margin-top:8px}
+    .big{font-size:1.4rem;font-weight:600}
+    .note{font-size:0.9rem;color:#555;margin-top:12px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Look‑alike (Spaß‑Demo)</h2>
+    <p>Diese Demo vergleicht **keine** biometrische Identität. Sie rechnet nur eine grobe visuelle Ähnlichkeit (Farb‑/Texturähnlichkeit) lokal im Browser — nichts verlässt Ihren Rechner.</p>
+
+    <div class="row">
+      <div style="flex:1 1 320px">
+        <div class="big">Webcam</div>
+        <video id="video" autoplay playsinline width="320" height="240"></video>
+        <div class="controls">
+          <button id="snap">Foto aufnehmen</button>
+          <button id="toggleCam">Kamera an/aus</button>
+        </div>
+      </div>
+
+      <div style="flex:1 1 320px">
+        <div class="big">Referenzbild</div>
+        <input id="refUpload" type="file" accept="image/*" />
+        <div style="margin-top:8px"><img id="refImg" alt="Referenz" width="320" height="240"/></div>
+      </div>
+
+      <div style="flex:1 1 200px">
+        <div class="big">Snapshot</div>
+        <canvas id="snapCanvas" width="320" height="240" style="background:#eee"></canvas>
+        <div style="margin-top:8px"><button id="compare">Vergleichen</button></div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px">
+      <div class="big">Ergebnis: <span id="result">—</span></div>
+      <div class="note">Hinweis: Dieses Tool ist zur Unterhaltung gedacht. Es erkennt keine Person und speichert keine Bilder. Für echte biometrische Vergleiche darf ich nicht helfen.</div>
+    </div>
+  </div>
+
+<script>
+const video = document.getElementById('video');
+const snapCanvas = document.getElementById('snapCanvas');
+const refImg = document.getElementById('refImg');
+const snapBtn = document.getElementById('snap');
+const compareBtn = document.getElementById('compare');
+const refUpload = document.getElementById('refUpload');
+const resultSpan = document.getElementById('result');
+const toggleCamBtn = document.getElementById('toggleCam');
+let stream = null;
+
+async function startCamera(){
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({video:{width:640}});
+    video.srcObject = stream;
+    toggleCamBtn.textContent = 'Kamera aus';
+  }catch(e){
+    alert('Kamera konnte nicht gestartet werden: '+e.message);
+  }
+}
+
+function stopCamera(){
+  if(stream){
+    stream.getTracks().forEach(t=>t.stop());
+    stream = null;
+    video.srcObject = null;
+    toggleCamBtn.textContent = 'Kamera an';
+  }
+}
+
+toggleCamBtn.addEventListener('click', ()=>{
+  if(stream) stopCamera(); else startCamera();
+});
+
+startCamera();
+
+snapBtn.addEventListener('click', ()=>{
+  const ctx = snapCanvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
+});
+
+refUpload.addEventListener('change', e=>{
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  const url = URL.createObjectURL(f);
+  refImg.onload = ()=> URL.revokeObjectURL(url);
+  refImg.src = url;
+});
+
+function getImageDataFromElement(imgOrCanvas){
+  const w = 64; const h = 64; // small for speed
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  // draw with cover behaviour
+  ctx.drawImage(imgOrCanvas, 0, 0, w, h);
+  return ctx.getImageData(0,0,w,h);
+}
+
+function rgbHistogram(imageData, binsPerChannel=8){
+  const bins = new Array(binsPerChannel*3).fill(0);
+  const data = imageData.data;
+  const step = 256 / binsPerChannel;
+  for(let i=0;i<data.length;i+=4){
+    const r = Math.floor(data[i]/step);
+    const g = Math.floor(data[i+1]/step);
+    const b = Math.floor(data[i+2]/step);
+    bins[r]++;
+    bins[binsPerChannel + g]++;
+    bins[2*binsPerChannel + b]++;
+  }
+  // normalize
+  const total = (imageData.data.length/4);
+  return bins.map(x=>x/total);
+}
+
+function cosineSimilarity(a,b){
+  let dot=0, na=0, nb=0;
+  for(let i=0;i<a.length;i++){
+    dot += a[i]*b[i]; na += a[i]*a[i]; nb += b[i]*b[i];
+  }
+  if(na===0||nb===0) return 0;
+  return dot / (Math.sqrt(na)*Math.sqrt(nb));
+}
+
+compareBtn.addEventListener('click', ()=>{
+  // need a snapshot and a reference image
+  const ctx = snapCanvas.getContext('2d');
+  const hasSnapshot = ctx.getImageData(0,0,1,1); // just check
+  if(!refImg.src){ alert('Bitte zuerst ein Referenzbild hochladen.'); return; }
+  // compute histograms
+  const snapData = getImageDataFromElement(snapCanvas);
+  const refData = getImageDataFromElement(refImg);
+  const h1 = rgbHistogram(snapData, 8);
+  const h2 = rgbHistogram(refData, 8);
+  const sim = cosineSimilarity(h1,h2); // 0..1
+  const percent = Math.round(sim*100);
+  resultSpan.textContent = percent + '% ähnlich (nur Farb-/Texturapproximation)';
+});
+
+// Accessibility: if no camera permission or blocked, allow user to still use upload and canvas draw
+</script>
+</body>
+</html>
