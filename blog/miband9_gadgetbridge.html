@@ -18,43 +18,53 @@
   <main>
     <h2>MI Band 9 mit Gadgetbridge verbinden – Schritt-für-Schritt</h2>
 
-    <p>Mit dieser Anleitung kannst du dein MiBand9 lokal, datenschutzfreundlich und ohne Cloud nutzen.</p>
+    <p>Mit dieser Anleitung kannst du dein Mi Band 9 lokal, datenschutzfreundlich und ohne Cloud nutzen.</p>
 
-    <!-- FLEXBOX NUR UM ANLEITUNG + BILD -->
+    <!-- FLEXBOX-Bereich: Text & Bild nebeneinander -->
     <div class="content-row">
+      
+      <!-- TEXTBEREICH -->
       <div class="text-container">
         <p><strong>1. Xiaomi-App installieren:</strong> Mi Fitness / Mi Health / Xiaomi Wear</p>
-        <p><strong>2. MiBand koppeln:</strong> dadurch wird ein Key erstellt</p>
+        <p><strong>2. Mi Band koppeln:</strong> dadurch wird ein Key erstellt</p>
         <p><strong>3. Computer vorbereiten:</strong> adb (Android Debugging Bridge) installieren</p>
         <p><strong>4. USB-Debugging aktivieren:</strong> auf dem Smartphone einschalten</p>
         <p><strong>5. Smartphone verbinden:</strong> per USB mit dem Computer</p>
-        <p><strong>6. Key auslesen:</strong></p>
 
+        <p><strong>6. Key auslesen:</strong></p>
         <div class="code-container">
           <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre id="adbCode">
+          <pre><code>
 adb shell
-grep -Eo '(encryptKey|token|authKey|huamiAuthKey)[":= ]+[[:xdigit:]]{32}' /sdcard/Android/data/{com.xiaomi.wearable,com.mi.health}/files/log/*.log | grep -oE '[[:xdigit:]]{32}' | sort | uniq
-          </pre>
+grep -Eo '(encryptKey|token|authKey|huamiAuthKey)[":= ]+[[:xdigit:]]{32}' \
+/sdcard/Android/data/{com.xiaomi.wearable,com.mi.health}/files/log/*.log \
+| grep -oE '[[:xdigit:]]{32}' | sort | uniq
+          </code></pre>
         </div>
 
-        <p>Den langen Code kopieren</p>
-        <p>7. Bluetooth aus, Xiaomi-App deinstallieren, Bluetooth wieder einschalten</p>
-        <p>8. Gadgetbridge starten, Gerät verbinden und Key eingeben</p>
-        <p>9. Fertig: MiBand funktioniert lokal und datenschutzfreundlich</p>
+        <p>Den langen Code kopieren und später in Gadgetbridge einfügen.</p>
 
-        <p><strong>Tipp:</strong> Für Outdoor-Sport GPS Timeout erhöhen, externe Apps wie OpenTracks einbinden für genauere Aufzeichnungen.</p>
+        <p><strong>7.</strong> Bluetooth aus → Xiaomi-App deinstallieren → Bluetooth wieder einschalten</p>
+        <p><strong>8.</strong> Gadgetbridge starten, Gerät verbinden und Key eingeben</p>
+        <p><strong>9.</strong> Fertig: Das Mi Band funktioniert lokal und datenschutzfreundlich 🎉</p>
+
+        <p><strong>Tipp:</strong> Für Outdoor-Sport GPS Timeout erhöhen; externe Apps wie OpenTracks einbinden für genauere Aufzeichnungen.</p>
 
         <button class="cta" onclick="window.location.href='https://f-droid.org/packages/nodomain.freeyourgadget.gadgetbridge/'">
           Gadgetbridge auf F-Droid herunterladen
         </button>
+      </div>
+
+      <!-- BILDBEREICH -->
+      <div class="image-container">
+        <img src="/Medien/MiBand_9.jpeg" alt="Mi Band 9">
       </div>
     </div>
   </main>
 
   <footer>
     <div class="footer-container">
-      <p>© 2025 Dein Name – Alle Rechte vorbehalten</p>
+      <p>© 2025 Imacikus – Alle Rechte vorbehalten</p>
       <nav>
         <a href="../blog.html">Blog</a>
         <a href="../about.html">Über mich</a>
@@ -65,8 +75,9 @@ grep -Eo '(encryptKey|token|authKey|huamiAuthKey)[":= ]+[[:xdigit:]]{32}' /sdcar
   </footer>
 
   <script>
+    // --- Copy Button ---
     function copyCode(button) {
-      const code = button.nextElementSibling.textContent;
+      const code = button.nextElementSibling.textContent.trim();
       navigator.clipboard.writeText(code).then(() => {
         button.textContent = 'Copied!';
         setTimeout(() => { button.textContent = 'Copy'; }, 2000);
