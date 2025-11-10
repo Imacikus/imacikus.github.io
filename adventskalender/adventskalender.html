@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎄 Adventskalender – Tag 1</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Schneefall-Effekt */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://cdn.jsdelivr.net/gh/nikitavoloboev/unsplash-wallpapers/snowfall.gif');
+      background-size: cover;
+      opacity: 0.15;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-red-200 to-red-400 text-white font-sans">
+
+  <div class="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-xl max-w-lg text-center border border-white/30">
+    <h1 class="text-4xl font-bold mb-4">🎁 Adventskalender – Tag 1</h1>
+    <p class="text-lg mb-4">Willkommen zum ersten Tag deines ganz persönlichen Adventskalenders! ✨</p>
+
+    <div class="bg-white/10 rounded-xl p-4 mb-6">
+      <p class="text-md leading-relaxed">
+        Heute wartet etwas Süßes auf dich – und ein kleiner Brief mit lieben Worten. ❤️<br><br>
+        Scanne den QR-Code aus deinem Kalender, um deine digitale Überraschung zu sehen!
+      </p>
+    </div>
+
+    <div class="mb-6">
+      <img src="https://media.giphy.com/media/3oEjHWbXcpeKhTktXi/giphy.gif" alt="Weihnachten" class="mx-auto rounded-xl shadow-lg" />
+    </div>
+
+    <div class="mt-6">
+      <p class="text-sm text-white/90">📅 1. Dezember 2025</p>
+      <p class="text-sm text-white/90">💌 "Ein süßer Anfang für eine magische Adventszeit!"</p>
+    </div>
+
+    <div class="mt-8">
+      <a href="#" class="bg-white text-red-600 font-semibold px-4 py-2 rounded-xl shadow hover:bg-red-50 transition">
+        👉 QR-Link öffnen (Platzhalter)
+      </a>
+    </div>
+  </div>
+
+  <footer class="mt-10 text-white/80 text-sm">
+    <p>© 2025 Adventskalender von Linux 🎄</p>
+  </footer>
+
+</body>
+</html>
