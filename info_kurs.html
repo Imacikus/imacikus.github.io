@@ -12,27 +12,27 @@
     <style>
         /* --- Eigene Grün-Definition (ersetzt Primary von Bootstrap) --- */
         :root, [data-bs-theme="light"] {
-            --bs-primary: #3fb687; /* Helles Pastellgrün */
-            --bs-primary-rgb: 115, 223, 180; /* KORRIGIERT: RGB von #73dfb4 */
+            --bs-primary: #3fb687; /* Ihr gewähltes Grün */
+            --bs-primary-rgb: 63, 182, 135; /* KORRIGIERT: RGB von #3fb687 */
             --bs-secondary-bg: #e9ecef;
-            --bs-body-bg-color: #f8f9fa; /* Helles Standard-Body-BG */
+            --bs-body-bg-color: #f8f9fa;
         }
 
         /* --- Dark Mode Anpassungen --- */
         [data-bs-theme="dark"] {
-            --bs-body-bg: #121212; /* Sehr dunkler Hintergrund */
+            --bs-body-bg: #121212; 
             --bs-body-color: #f0f0f0;
-            --bs-card-bg: #1e1e1e; /* Dunklere Elemente */
-            --bs-primary: #5cb984; /* Hellere Version für Dark Mode */
-            --bs-primary-rgb: 134, 252, 185; /* KORRIGIERT: RGB von #86fcb9 */
+            --bs-card-bg: #1e1e1e; 
+            --bs-primary: #5cb984; /* Ihr gewähltes helleres Grün für Dark Mode */
+            --bs-primary-rgb: 92, 185, 132; /* KORRIGIERT: RGB von #5cb984 */
             --bs-secondary-bg: #272727;
         }
 
         /* --- Allgemeine Stile --- */
         
-        /* Korrektur für Textfarbe im Header, da Primary (Grün) sehr hell ist */
+        /* Korrektur für Textfarbe im Header, da Primary (Grün) relativ hell ist */
         [data-bs-theme="light"] .bg-primary {
-            color: #121212 !important; /* Textfarbe auf dunkel ändern */
+            color: #121212 !important;
         }
         
         .file-browser, .content-viewer {
@@ -58,13 +58,17 @@
         /* Hervorhebung des aktiven Elements */
         .file-item.active {
             background-color: var(--bs-primary) !important;
-            /* Textfarbe auf dunkel im Light Mode, hell im Dark Mode, da Primary-Farbe immer hell ist */
             color: var(--bs-body-bg) !important; 
         }
 
-        /* Dark Mode: Text der aktiven Datei muss hell sein, weil der Hintergrund dunkel ist */
         [data-bs-theme="dark"] .file-item.active {
             color: var(--bs-body-color) !important;
+        }
+
+        /* Footer-Style für das Easter Egg */
+        .footer-easter-egg {
+            cursor: pointer; 
+            user-select: none; 
         }
 
         /* Styling für den Code/Text-Viewer */
@@ -149,7 +153,29 @@
         </div>
     </div>
 
-    <footer class="bg-dark text-white text-center p-3 mt-5">
+    <div class="modal fade" id="doomModal" tabindex="-1" aria-labelledby="doomModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-dark">
+            <h5 class="modal-title" id="doomModalLabel">Die ultimative Informatik-Frage!</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="lead">Was ist die korrekte Antwort auf **1 + 1**?</p>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Antwort:</span>
+              <input type="number" class="form-control" id="doomAnswer" placeholder="Geben Sie hier die magische Zahl ein...">
+            </div>
+            <div id="doomMessage" class="mt-2 text-danger"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+            <button type="button" class="btn btn-primary" id="doomSubmit">Absenden</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="bg-dark text-white text-center p-3 mt-5 footer-easter-egg" data-bs-toggle="modal" data-bs-target="#doomModal">
         &copy; 2025 Imacikus - Informatikkurs 
     </footer>
 
@@ -168,6 +194,12 @@
         const viewerContentElement = document.getElementById('viewer-content');
         const breadcrumbListElement = document.getElementById('breadcrumb-list');
         
+        // Elemente für das Easter Egg
+        const doomAnswerInput = document.getElementById('doomAnswer');
+        const doomSubmitButton = document.getElementById('doomSubmit');
+        const doomMessageElement = document.getElementById('doomMessage');
+        // WICHTIG: Die manuelle Initialisierung von 'new bootstrap.Modal()' wurde hier entfernt.
+
         // Zustand
         let currentPath = ''; 
         let currentActiveItem = null; 
@@ -178,7 +210,6 @@
             localStorage.setItem('darkMode', isDark);
             darkModeToggle.checked = isDark;
             
-            // Helle Farbe für den Dark Mode Schalter-Label
             const label = document.querySelector('label[for="darkModeToggle"]');
             if (label) {
                 label.classList.toggle('text-white', isDark);
@@ -186,17 +217,46 @@
             }
         }
 
-        // Lade den gespeicherten Modus oder verwende die System-Präferenz
         const savedDarkMode = localStorage.getItem('darkMode');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         
         setDarkMode(savedDarkMode === 'true' || (savedDarkMode === null && prefersDark));
 
-        // Event-Listener für den Umschalter
         darkModeToggle.addEventListener('change', (e) => {
             setDarkMode(e.target.checked);
         });
-
+        
+        // --- EASTER EGG LOGIK ---
+        doomSubmitButton.addEventListener('click', () => {
+            
+            const modalElement = document.getElementById('doomModal');
+            
+            // Die gesuchte "magische Zahl" ist 3 (der gewünschte Cheat Code)
+            if (doomAnswerInput.value.trim() === '3') { 
+                
+                // 1. Modal schließen über die Bootstrap-Methode
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    modalInstance.hide(); 
+                }
+                
+                // 2. Popup öffnen (Link zur Classic DOOM Website)
+                const doomURL = 'https://archive.org/details/doom-online'; 
+                window.open(doomURL, 'DoomPopup', 'width=800,height=600,scrollbars=yes,resizable=yes');
+                
+            } else {
+                // Falsche Antwort
+                doomMessageElement.textContent = '❌ Falsche Antwort. Sind Sie sicher, dass Sie Informatik studieren? Versuchen Sie es erneut!';
+                doomAnswerInput.value = '';
+            }
+        });
+        
+        // Modal-Reset beim Anzeigen/Schließen
+        document.getElementById('doomModal').addEventListener('hidden.bs.modal', () => {
+            doomAnswerInput.value = '';
+            doomMessageElement.textContent = '';
+        });
+        
         // --- GITHUB API & DATEIBROWSER LOGIK ---
 
         /**
@@ -302,7 +362,6 @@
                 if (content) {
                     
                     if (fileItem.name.match(/\.md$/i)) {
-                        // Marked.js verwenden, um Markdown in HTML umzuwandeln
                         const renderedHtml = marked.parse(content); 
                         
                         viewerContentElement.innerHTML = `
@@ -341,7 +400,7 @@
             // Startpunkt: Root
             const homeItem = document.createElement('li');
             homeItem.classList.add('breadcrumb-item');
-            homeItem.innerHTML = `<a href="#" onclick="loadPath('')" class="link-primary">Hauptverzeichniss</a>`;
+            homeItem.innerHTML = `<a href="#" onclick="loadPath('')" class="link-primary">Hauptverzeichnis</a>`;
             breadcrumbListElement.appendChild(homeItem);
 
             if (currentPath) {
