@@ -232,7 +232,7 @@
             const modalElement = document.getElementById('doomModal');
             
             // Die gesuchte "magische Zahl" ist 3 (der gewünschte Cheat Code)
-            if (doomAnswerInput.value.trim() === '3') { 
+            if (doomAnswerInput.value.trim() === '161') { 
                 
                 // 1. Modal schließen über die Bootstrap-Methode
                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
@@ -241,7 +241,7 @@
                 }
                 
                 // 2. Popup öffnen (Link zur Classic DOOM Website)
-                const doomURL = 'https://archive.org/details/doom-online'; 
+                const doomURL = 'https://www.retrogames.cz/play_414-DOS.php'; 
                 window.open(doomURL, 'DoomPopup', 'width=800,height=600,scrollbars=yes,resizable=yes');
                 
             } else {
