@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="de" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kursmaterialien - by Imacikus</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> 
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* --- Eigene Grün-Definition (ersetzt Primary von Bootstrap) --- */
+        :root, [data-bs-theme="light"] {
+            --bs-primary: #3fb687; /* Helles Pastellgrün */
+            --bs-primary-rgb: 115, 223, 180; /* KORRIGIERT: RGB von #73dfb4 */
+            --bs-secondary-bg: #e9ecef;
+            --bs-body-bg-color: #f8f9fa; /* Helles Standard-Body-BG */
+        }
+
+        /* --- Dark Mode Anpassungen --- */
+        [data-bs-theme="dark"] {
+            --bs-body-bg: #121212; /* Sehr dunkler Hintergrund */
+            --bs-body-color: #f0f0f0;
+            --bs-card-bg: #1e1e1e; /* Dunklere Elemente */
+            --bs-primary: #5cb984; /* Hellere Version für Dark Mode */
+            --bs-primary-rgb: 134, 252, 185; /* KORRIGIERT: RGB von #86fcb9 */
+            --bs-secondary-bg: #272727;
+        }
+
+        /* --- Allgemeine Stile --- */
+        
+        /* Korrektur für Textfarbe im Header, da Primary (Grün) sehr hell ist */
+        [data-bs-theme="light"] .bg-primary {
+            color: #121212 !important; /* Textfarbe auf dunkel ändern */
+        }
+        
+        .file-browser, .content-viewer {
+            padding: 20px;
+            border-radius: 0.5rem;
+        }
+        .file-item {
+            cursor: pointer;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            border-radius: 0.3rem;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .file-browser .file-item:hover {
+            background-color: var(--bs-secondary-bg);
+        }
+        .file-icon {
+            margin-right: 10px;
+        }
+        
+        /* Hervorhebung des aktiven Elements */
+        .file-item.active {
+            background-color: var(--bs-primary) !important;
+            /* Textfarbe auf dunkel im Light Mode, hell im Dark Mode, da Primary-Farbe immer hell ist */
+            color: var(--bs-body-bg) !important; 
+        }
+
+        /* Dark Mode: Text der aktiven Datei muss hell sein, weil der Hintergrund dunkel ist */
+        [data-bs-theme="dark"] .file-item.active {
+            color: var(--bs-body-color) !important;
+        }
+
+        /* Styling für den Code/Text-Viewer */
+        .content-viewer pre, .content-viewer .markdown-body {
+            background-color: var(--bs-secondary-bg);
+            color: var(--bs-body-color);
+            padding: 15px;
+            border-radius: 0.3rem;
+            white-space: pre-wrap;
+            border: 1px solid var(--bs-border-color);
+        }
+        .content-viewer .markdown-body {
+            line-height: 1.6;
+        }
+        .content-viewer .markdown-body h1 { font-size: 1.8rem; }
+        .content-viewer .markdown-body h2 { font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+
+    <header class="bg-primary text-white p-4 mb-4">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1>Info Kurs: Material-Übersicht</h1>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="darkModeToggle" role="switch">
+                <label class="form-check-label" for="darkModeToggle">🌙 Dark Mode</label>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            
+            <div class="col-lg-6">
+                <div class="file-browser card card-body mb-4">
+                    <h3>📁 Kursmaterialien</h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb" id="breadcrumb-list">
+                            </ol>
+                    </nav>
+                    <div id="file-list" class="list-group">
+                        <div class="text-center p-5 text-muted">Lade Inhalte...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="content-viewer card card-body mb-4" id="content-viewer-container">
+                    <h3 id="viewer-title">Inhalts-Vorschau</h3>
+                    <div id="viewer-content">
+                        <p class="text-muted">Wähle eine Datei aus der linken Liste, um den Inhalt anzuzeigen.</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="file-browser card card-body">
+                    <h3>❓ FAQ (Häufige Fragen)</h3>
+                    <div class="accordion" id="faqAccordion">
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header"><button class="accordion-button bg-secondary-subtle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true">Wie navigiere ich zu einem anderen Schuljahr?</button></h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion"><div class="accordion-body">Klicke einfach auf die Ordner in der linken Spalte. Der Pfad wird oben im Menü angezeigt und dient zur einfachen Rückkehr.</div></div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed bg-secondary-subtle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false">Was tun, wenn eine Datei nicht angezeigt wird?</button></h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Die Website kann nur Text-basierte Dateien direkt anzeigen. Für Binärdateien erhaltet Ihr einen Link, um die Datei direkt auf GitHub zu öffnen oder herunterzuladen.</div></div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header"><button class="accordion-button collapsed bg-secondary-subtle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false">Wie schalte ich den Dark Mode aus?</button></h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Nutzt einfach den 🌙 Dark Mode Schalter oben rechts im Header. Die Präferenz wird für zukünftige Besuche gespeichert.</div></div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center p-3 mt-5">
+        &copy; 2025 Imacikus - Informatikkurs 
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const REPO_OWNER = 'Imacikus';
+        const REPO_NAME = 'Informatikuntericht';
+        const GITHUB_API_BASE = 'https://api.github.com';
+        
+        // DOM-Elemente
+        const htmlElement = document.documentElement;
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const fileListElement = document.getElementById('file-list');
+        const viewerTitleElement = document.getElementById('viewer-title');
+        const viewerContentElement = document.getElementById('viewer-content');
+        const breadcrumbListElement = document.getElementById('breadcrumb-list');
+        
+        // Zustand
+        let currentPath = ''; 
+        let currentActiveItem = null; 
+
+        // --- DARK MODE LOGIK ---
+        function setDarkMode(isDark) {
+            htmlElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
+            localStorage.setItem('darkMode', isDark);
+            darkModeToggle.checked = isDark;
+            
+            // Helle Farbe für den Dark Mode Schalter-Label
+            const label = document.querySelector('label[for="darkModeToggle"]');
+            if (label) {
+                label.classList.toggle('text-white', isDark);
+                label.classList.toggle('text-dark', !isDark);
+            }
+        }
+
+        // Lade den gespeicherten Modus oder verwende die System-Präferenz
+        const savedDarkMode = localStorage.getItem('darkMode');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        setDarkMode(savedDarkMode === 'true' || (savedDarkMode === null && prefersDark));
+
+        // Event-Listener für den Umschalter
+        darkModeToggle.addEventListener('change', (e) => {
+            setDarkMode(e.target.checked);
+        });
+
+        // --- GITHUB API & DATEIBROWSER LOGIK ---
+
+        /**
+         * Ruft die Inhalte eines Pfades ab (Ordner oder Datei).
+         */
+        async function fetchGitHubContent(path, raw = false) {
+            const url = `${GITHUB_API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+            const headers = {
+                'Accept': raw ? 'application/vnd.github.v3.raw' : 'application/vnd.github.v3+json'
+            };
+
+            try {
+                const response = await fetch(url, { method: 'GET', headers });
+                
+                if (!response.ok) {
+                    throw new Error(`GitHub API Fehler! Status: ${response.status} (${response.statusText})`);
+                }
+
+                return raw ? response.text() : response.json(); 
+
+            } catch (error) {
+                console.error("Fehler beim Abrufen der GitHub-Inhalte:", error);
+                fileListElement.innerHTML = `<div class="alert alert-danger">Fehler beim Laden: ${error.message}</div>`;
+                return null;
+            }
+        }
+        
+        /**
+         * Lädt und rendert die Liste der Ordner/Dateien.
+         */
+        async function loadPath(path) {
+            currentPath = path;
+            
+            // Ladeanzeige und Breadcrumb aktualisieren
+            fileListElement.innerHTML = `<div class="text-center p-5 text-muted"><div class="spinner-border text-primary" role="status"></div> Lade ${path || 'Hauptverzeichnis'}...</div>`;
+            updateBreadcrumb();
+            
+            // Aktive Hervorhebung zurücksetzen
+            if (currentActiveItem) {
+                currentActiveItem.classList.remove('active');
+                currentActiveItem = null;
+            }
+
+            const contents = await fetchGitHubContent(path);
+
+            if (contents && Array.isArray(contents)) {
+                fileListElement.innerHTML = ''; 
+                
+                // Sortierung: Ordner zuerst, dann Dateien
+                contents.sort((a, b) => {
+                    if (a.type === 'dir' && b.type !== 'dir') return -1;
+                    if (a.type !== 'dir' && b.type === 'dir') return 1;
+                    return a.name.localeCompare(b.name);
+                });
+
+                contents.forEach(item => {
+                    const listItem = document.createElement('a');
+                    listItem.classList.add('file-item', 'list-group-item', 'list-group-item-action');
+                    listItem.setAttribute('title', item.name);
+                    
+                    let icon;
+                    if (item.type === 'dir') {
+                        icon = '📂'; 
+                        listItem.onclick = () => loadPath(item.path);
+                    } else {
+                        // Dateisymbole
+                        if (item.name.match(/\.pdf$/i)) icon = '📄';
+                        else if (item.name.match(/\.md$/i)) icon = '📝';
+                        else if (item.name.match(/\.(jpg|png|gif|jpeg)$/i)) icon = '🖼️';
+                        else icon = '📎'; 
+                        
+                        listItem.onclick = (e) => {
+                            // Aktive Hervorhebung verwalten
+                            if (currentActiveItem) currentActiveItem.classList.remove('active');
+                            listItem.classList.add('active');
+                            currentActiveItem = listItem;
+                            
+                            viewFileContent(item);
+                            
+                            // Zum Viewer scrollen
+                            document.getElementById('content-viewer-container').scrollIntoView({ behavior: 'smooth' });
+                        };
+                    }
+                    
+                    listItem.innerHTML = `<span class="file-icon">${icon}</span>${item.name}`;
+                    fileListElement.appendChild(listItem);
+                });
+            }
+        }
+        
+        /**
+         * Lädt und zeigt den Inhalt einer ausgewählten Datei an.
+         */
+        async function viewFileContent(fileItem) {
+            viewerTitleElement.textContent = `Vorschau: ${fileItem.name}`;
+            viewerContentElement.innerHTML = `<div class="text-center p-4 text-muted"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Lade Datei-Inhalt...</div>`;
+            
+            // Text-basierte Dateien anzeigen
+            const isTextViewable = fileItem.name.match(/\.(txt|md|html|js|css|json|log)$/i);
+            
+            if (isTextViewable) {
+                const content = await fetchGitHubContent(fileItem.path, true);
+                if (content) {
+                    
+                    if (fileItem.name.match(/\.md$/i)) {
+                        // Marked.js verwenden, um Markdown in HTML umzuwandeln
+                        const renderedHtml = marked.parse(content); 
+                        
+                        viewerContentElement.innerHTML = `
+                            <p class="small text-muted">📝 Vorschau:</p>
+                            <div class="markdown-body p-3">${renderedHtml}</div>
+                        `;
+
+                    } else {
+                         // Rohtext für andere Dateitypen
+                        viewerContentElement.innerHTML = `
+                            <p class="small text-muted">📎 Rohtextinhalt:</p>
+                            <pre>${content}</pre>
+                        `;
+                    }
+                }
+            } else if (fileItem.html_url) {
+                // Für alle anderen Dateien (PDFs, Bilder, Zips)
+                viewerContentElement.innerHTML = `
+                    <div class="alert alert-info" role="alert">
+                        Dies ist keine direkt anzeigbare Textdatei (${fileItem.name.split('.').pop().toUpperCase()}-Format).
+                        <a href="${fileItem.html_url}" target="_blank" class="alert-link">
+                            Öffnen/Herunterladen auf GitHub (${fileItem.name})
+                        </a>
+                        <p class="mt-2 mb-0 small">Bitte nutze diesen Link, um die Datei anzuzeigen.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        /**
+         * Aktualisiert die Breadcrumb-Navigation.
+         */
+        function updateBreadcrumb() {
+            breadcrumbListElement.innerHTML = '';
+            
+            // Startpunkt: Root
+            const homeItem = document.createElement('li');
+            homeItem.classList.add('breadcrumb-item');
+            homeItem.innerHTML = `<a href="#" onclick="loadPath('')" class="link-primary">Hauptverzeichniss</a>`;
+            breadcrumbListElement.appendChild(homeItem);
+
+            if (currentPath) {
+                const parts = currentPath.split('/');
+                let fullPath = '';
+                
+                parts.forEach((part, index) => {
+                    fullPath += (index > 0 ? '/' : '') + part;
+                    const item = document.createElement('li');
+                    
+                    if (index === parts.length - 1) {
+                        item.classList.add('breadcrumb-item', 'active');
+                        item.setAttribute('aria-current', 'page');
+                        item.textContent = part;
+                    } else {
+                        item.classList.add('breadcrumb-item');
+                        const pathForClick = fullPath;
+                        item.innerHTML = `<a href="#" onclick="loadPath('${pathForClick}')" class="link-primary">${part}</a>`;
+                    }
+                    breadcrumbListElement.appendChild(item);
+                });
+            }
+        }
+        
+        // Anwendung starten
+        loadPath(''); 
+    </script>
+
+</body>
+</html>
