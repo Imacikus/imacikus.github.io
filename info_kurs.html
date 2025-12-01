@@ -13,7 +13,7 @@
         /* --- Eigene Grün-Definition (ersetzt Primary von Bootstrap) --- */
         :root, [data-bs-theme="light"] {
             --bs-primary: #3fb687; /* Ihr gewähltes Grün */
-            --bs-primary-rgb: 63, 182, 135; /* KORRIGIERT: RGB von #3fb687 */
+            --bs-primary-rgb: 63, 182, 135; 
             --bs-secondary-bg: #e9ecef;
             --bs-body-bg-color: #f8f9fa;
         }
@@ -24,7 +24,7 @@
             --bs-body-color: #f0f0f0;
             --bs-card-bg: #1e1e1e; 
             --bs-primary: #5cb984; /* Ihr gewähltes helleres Grün für Dark Mode */
-            --bs-primary-rgb: 92, 185, 132; /* KORRIGIERT: RGB von #5cb984 */
+            --bs-primary-rgb: 92, 185, 132; 
             --bs-secondary-bg: #272727;
         }
 
@@ -175,6 +175,7 @@
         </div>
       </div>
     </div>
+    
     <footer class="bg-dark text-white text-center p-3 mt-5 footer-easter-egg" data-bs-toggle="modal" data-bs-target="#doomModal">
         &copy; 2025 Imacikus - Informatikkurs 
     </footer>
@@ -198,7 +199,7 @@
         const doomAnswerInput = document.getElementById('doomAnswer');
         const doomSubmitButton = document.getElementById('doomSubmit');
         const doomMessageElement = document.getElementById('doomMessage');
-        // WICHTIG: Die manuelle Initialisierung von 'new bootstrap.Modal()' wurde hier entfernt.
+        // WICHTIG: Die manuelle Initialisierung von 'new bootstrap.Modal()' wurde entfernt.
 
         // Zustand
         let currentPath = ''; 
@@ -231,7 +232,7 @@
             
             const modalElement = document.getElementById('doomModal');
             
-            // Die gesuchte "magische Zahl" ist 3 (der gewünschte Cheat Code)
+            // Der gewünschte Cheat Code
             if (doomAnswerInput.value.trim() === '161') { 
                 
                 // 1. Modal schließen über die Bootstrap-Methode
@@ -240,7 +241,7 @@
                     modalInstance.hide(); 
                 }
                 
-                // 2. Popup öffnen (Link zur Classic DOOM Website)
+                // 2. Popup öffnen (mit der neuen DOOM-URL)
                 const doomURL = 'https://www.retrogames.cz/play_414-DOS.php'; 
                 window.open(doomURL, 'DoomPopup', 'width=800,height=600,scrollbars=yes,resizable=yes');
                 
@@ -322,8 +323,9 @@
                         icon = '📂'; 
                         listItem.onclick = () => loadPath(item.path);
                     } else {
-                        // Dateisymbole
-                        if (item.name.match(/\.pdf$/i)) icon = '📄';
+                        // NEU: Python-Icon und Behandlung 
+                        if (item.name.match(/\.py$/i)) icon = '🐍'; 
+                        else if (item.name.match(/\.pdf$/i)) icon = '📄';
                         else if (item.name.match(/\.md$/i)) icon = '📝';
                         else if (item.name.match(/\.(jpg|png|gif|jpeg)$/i)) icon = '🖼️';
                         else icon = '📎'; 
@@ -354,8 +356,8 @@
             viewerTitleElement.textContent = `Vorschau: ${fileItem.name}`;
             viewerContentElement.innerHTML = `<div class="text-center p-4 text-muted"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Lade Datei-Inhalt...</div>`;
             
-            // Text-basierte Dateien anzeigen
-            const isTextViewable = fileItem.name.match(/\.(txt|md|html|js|css|json|log)$/i);
+            // Text-basierte Dateien erkennen (NEU: *.py hinzugefügt)
+            const isTextViewable = fileItem.name.match(/\.(txt|md|html|js|css|json|log|py)$/i);
             
             if (isTextViewable) {
                 const content = await fetchGitHubContent(fileItem.path, true);
@@ -370,7 +372,7 @@
                         `;
 
                     } else {
-                         // Rohtext für andere Dateitypen
+                         // Rohtext für andere Dateitypen (einschließlich Python, JS, etc.)
                         viewerContentElement.innerHTML = `
                             <p class="small text-muted">📎 Rohtextinhalt:</p>
                             <pre>${content}</pre>
