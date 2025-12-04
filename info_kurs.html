@@ -7,12 +7,16 @@
     
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> 
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
         /* --- Eigene Grün-Definition (ersetzt Primary von Bootstrap) --- */
         :root, [data-bs-theme="light"] {
-            --bs-primary: #3fb687; /* Ihr gewähltes Grün */
+            --bs-primary: #3fb687;
             --bs-primary-rgb: 63, 182, 135; 
             --bs-secondary-bg: #e9ecef;
             --bs-body-bg-color: #f8f9fa;
@@ -23,14 +27,13 @@
             --bs-body-bg: #121212; 
             --bs-body-color: #f0f0f0;
             --bs-card-bg: #1e1e1e; 
-            --bs-primary: #5cb984; /* Ihr gewähltes helleres Grün für Dark Mode */
+            --bs-primary: #5cb984;
             --bs-primary-rgb: 92, 185, 132; 
             --bs-secondary-bg: #272727;
         }
 
         /* --- Allgemeine Stile --- */
         
-        /* Korrektur für Textfarbe im Header, da Primary (Grün) relativ hell ist */
         [data-bs-theme="light"] .bg-primary {
             color: #121212 !important;
         }
@@ -72,19 +75,56 @@
         }
 
         /* Styling für den Code/Text-Viewer */
-        .content-viewer pre, .content-viewer .markdown-body {
-            background-color: var(--bs-secondary-bg);
-            color: var(--bs-body-color);
-            padding: 15px;
+        /* Wichtig: Entfernt das Standard-BG, damit Highlight.js BG übernehmen kann */
+        .content-viewer pre {
+            padding: 0;
             border-radius: 0.3rem;
-            white-space: pre-wrap;
-            border: 1px solid var(--bs-border-color);
+            border: none; /* Highlight.js liefert eigenen Border */
         }
+        /* Highlight.js Integration */
+        .content-viewer pre code {
+            padding: 15px; 
+            border-radius: 0.3rem;
+            display: block; /* Wichtig für korrekte Hintergrundfüllung */
+            overflow-x: auto;
+        }
+
         .content-viewer .markdown-body {
             line-height: 1.6;
+            background-color: var(--bs-secondary-bg); /* Behalte BG für Markdown */
+            padding: 15px;
+            border-radius: 0.3rem;
+            border: 1px solid var(--bs-border-color);
         }
-        .content-viewer .markdown-body h1 { font-size: 1.8rem; }
-        .content-viewer .markdown-body h2 { font-size: 1.5rem; }
+        
+        /* Vollbild-Modus Styling */
+        .content-viewer.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1050; /* Über allen anderen Elementen (außer Modal) */
+            background-color: var(--bs-body-bg) !important; 
+            margin: 0 !important;
+            padding: 30px !important;
+        }
+        
+        /* Damit der iFrame oder Code-Block den gesamten verfügbaren Platz im Vollbild einnimmt */
+        .content-viewer.fullscreen #viewer-content {
+            height: calc(100% - 60px); /* Abzüglich Header/Titel */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .content-viewer.fullscreen #viewer-content iframe,
+        .content-viewer.fullscreen #viewer-content pre,
+        .content-viewer.fullscreen .markdown-body {
+            flex-grow: 1; 
+            height: 100%;
+            margin-top: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -117,7 +157,15 @@
 
             <div class="col-lg-6">
                 <div class="content-viewer card card-body mb-4" id="content-viewer-container">
-                    <h3 id="viewer-title">Inhalts-Vorschau</h3>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 id="viewer-title" class="mb-0">Inhalts-Vorschau</h3>
+                        <button id="fullscreen-toggle" class="btn btn-sm btn-outline-secondary" title="Vollbild umschalten" style="display:none;">
+                            <span class="fullscreen-icon">⛶</span> </button>
+                    </div>
+                    
+                    <hr class="mt-2 mb-3"> 
+                    
                     <div id="viewer-content">
                         <p class="text-muted">Wähle eine Datei aus der linken Liste, um den Inhalt anzuzeigen.</p>
                     </div>
@@ -194,13 +242,14 @@
         const viewerTitleElement = document.getElementById('viewer-title');
         const viewerContentElement = document.getElementById('viewer-content');
         const breadcrumbListElement = document.getElementById('breadcrumb-list');
+        const contentViewerContainer = document.getElementById('content-viewer-container'); // NEU
+        const fullscreenToggle = document.getElementById('fullscreen-toggle'); // NEU
         
         // Elemente für das Easter Egg
         const doomAnswerInput = document.getElementById('doomAnswer');
         const doomSubmitButton = document.getElementById('doomSubmit');
         const doomMessageElement = document.getElementById('doomMessage');
-        // WICHTIG: Die manuelle Initialisierung von 'new bootstrap.Modal()' wurde entfernt.
-
+        
         // Zustand
         let currentPath = ''; 
         let currentActiveItem = null; 
@@ -216,6 +265,14 @@
                 label.classList.toggle('text-white', isDark);
                 label.classList.toggle('text-dark', !isDark);
             }
+            
+            // Highlight.js Theme aktualisieren
+            const hlLink = document.querySelector('link[href*="highlight.js"]');
+            if (hlLink) {
+                // 'default' ist hell, 'vs2015' ist dunkel (VS Code Dark)
+                const theme = isDark ? 'vs2015' : 'default'; 
+                hlLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${theme}.min.css`;
+            }
         }
 
         const savedDarkMode = localStorage.getItem('darkMode');
@@ -227,6 +284,24 @@
             setDarkMode(e.target.checked);
         });
         
+        // --- VOLLBILD LOGIK ---
+        function toggleFullscreen() {
+            // Klasse am Container umschalten
+            contentViewerContainer.classList.toggle('fullscreen');
+            
+            // Icon umschalten
+            const iconSpan = fullscreenToggle.querySelector('.fullscreen-icon');
+            if (contentViewerContainer.classList.contains('fullscreen')) {
+                 iconSpan.textContent = '缩小'; // Verkleinern-Symbol (oder '⛶' drehen)
+                 iconSpan.title = 'Vollbild verlassen';
+            } else {
+                 iconSpan.textContent = '⛶'; // Vollbild-Symbol
+                 iconSpan.title = 'Vollbild umschalten';
+            }
+        }
+
+        fullscreenToggle.addEventListener('click', toggleFullscreen);
+
         // --- EASTER EGG LOGIK ---
         doomSubmitButton.addEventListener('click', () => {
             
@@ -235,24 +310,20 @@
             // Der gewünschte Cheat Code
             if (doomAnswerInput.value.trim() === '161') { 
                 
-                // 1. Modal schließen über die Bootstrap-Methode
                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
                 if (modalInstance) {
                     modalInstance.hide(); 
                 }
                 
-                // 2. Popup öffnen (mit der neuen DOOM-URL)
                 const doomURL = 'https://www.retrogames.cz/play_414-DOS.php'; 
                 window.open(doomURL, 'DoomPopup', 'width=800,height=600,scrollbars=yes,resizable=yes');
                 
             } else {
-                // Falsche Antwort
                 doomMessageElement.textContent = '❌ Falsche Antwort. Sind Sie sicher, dass Sie Informatik studieren? Versuchen Sie es erneut!';
                 doomAnswerInput.value = '';
             }
         });
         
-        // Modal-Reset beim Anzeigen/Schließen
         document.getElementById('doomModal').addEventListener('hidden.bs.modal', () => {
             doomAnswerInput.value = '';
             doomMessageElement.textContent = '';
@@ -291,22 +362,25 @@
         async function loadPath(path) {
             currentPath = path;
             
-            // Ladeanzeige und Breadcrumb aktualisieren
             fileListElement.innerHTML = `<div class="text-center p-5 text-muted"><div class="spinner-border text-primary" role="status"></div> Lade ${path || 'Hauptverzeichnis'}...</div>`;
             updateBreadcrumb();
             
-            // Aktive Hervorhebung zurücksetzen
             if (currentActiveItem) {
                 currentActiveItem.classList.remove('active');
                 currentActiveItem = null;
             }
+            
+            // Vollbild-Button verstecken, da keine Datei ausgewählt ist
+            fullscreenToggle.style.display = 'none';
+            viewerTitleElement.textContent = 'Inhalts-Vorschau';
+            viewerContentElement.innerHTML = '<p class="text-muted">Wähle eine Datei aus der linken Liste, um den Inhalt anzuzeigen.</p>';
+
 
             const contents = await fetchGitHubContent(path);
 
             if (contents && Array.isArray(contents)) {
                 fileListElement.innerHTML = ''; 
                 
-                // Sortierung: Ordner zuerst, dann Dateien
                 contents.sort((a, b) => {
                     if (a.type === 'dir' && b.type !== 'dir') return -1;
                     if (a.type !== 'dir' && b.type === 'dir') return 1;
@@ -323,7 +397,6 @@
                         icon = '📂'; 
                         listItem.onclick = () => loadPath(item.path);
                     } else {
-                        // NEU: Python-Icon und Behandlung 
                         if (item.name.match(/\.py$/i)) icon = '🐍'; 
                         else if (item.name.match(/\.pdf$/i)) icon = '📄';
                         else if (item.name.match(/\.md$/i)) icon = '📝';
@@ -331,14 +404,12 @@
                         else icon = '📎'; 
                         
                         listItem.onclick = (e) => {
-                            // Aktive Hervorhebung verwalten
                             if (currentActiveItem) currentActiveItem.classList.remove('active');
                             listItem.classList.add('active');
                             currentActiveItem = listItem;
                             
                             viewFileContent(item);
                             
-                            // Zum Viewer scrollen
                             document.getElementById('content-viewer-container').scrollIntoView({ behavior: 'smooth' });
                         };
                     }
@@ -356,14 +427,32 @@
             viewerTitleElement.textContent = `Vorschau: ${fileItem.name}`;
             viewerContentElement.innerHTML = `<div class="text-center p-4 text-muted"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Lade Datei-Inhalt...</div>`;
             
-            // Text-basierte Dateien erkennen (NEU: *.py hinzugefügt)
-            const isTextViewable = fileItem.name.match(/\.(txt|md|html|js|css|json|log|py)$/i);
+            fullscreenToggle.style.display = 'inline-block'; // Vollbild-Button anzeigen
             
-            if (isTextViewable) {
+            // Text-basierte Dateien erkennen (*.py, *.js, *.html etc.)
+            const isCodeFile = fileItem.name.match(/\.(js|css|html|py|json|txt|log)$/i);
+            const isMarkdownFile = fileItem.name.match(/\.md$/i);
+            const isPDFFile = fileItem.name.match(/\.pdf$/i);
+            
+            if (isPDFFile && fileItem.html_url) {
+                // PDF-Vorschau (iFrame)
+                // Achtung: GitHub verwendet 'raw.githubusercontent.com' für die rohe Ansicht von PDFs
+                const rawUrl = fileItem.html_url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+                
+                viewerContentElement.innerHTML = `
+                    <div class="alert alert-warning" role="alert">
+                        Lade PDF-Vorschau. Sollte diese nicht funktionieren, nutze bitte den Download-Link unten.
+                    </div>
+                    <iframe src="${rawUrl}" style="width: 100%; height: 100%; min-height: 500px; border: 1px solid var(--bs-border-color);"></iframe>
+                `;
+                
+            } else if (isCodeFile || isMarkdownFile) {
+                
                 const content = await fetchGitHubContent(fileItem.path, true);
                 if (content) {
                     
-                    if (fileItem.name.match(/\.md$/i)) {
+                    if (isMarkdownFile) {
+                        // Markdown-Rendering
                         const renderedHtml = marked.parse(content); 
                         
                         viewerContentElement.innerHTML = `
@@ -371,16 +460,20 @@
                             <div class="markdown-body p-3">${renderedHtml}</div>
                         `;
 
-                    } else {
-                         // Rohtext für andere Dateitypen (einschließlich Python, JS, etc.)
-                        viewerContentElement.innerHTML = `
-                            <p class="small text-muted">📎 Rohtextinhalt:</p>
-                            <pre>${content}</pre>
-                        `;
+                    } else if (isCodeFile) {
+                         // Code-Highlighting
+                         const fileExtension = fileItem.name.split('.').pop();
+                         // Die Klasse 'language-...' ist für Highlight.js wichtig
+                         viewerContentElement.innerHTML = `
+                             <p class="small text-muted">📎 Code-Inhalt (Syntax-Highlighting):</p>
+                             <pre><code class="language-${fileExtension}">${content}</code></pre>
+                         `;
+                         // Highlight.js auf den neuen Inhalt anwenden
+                         hljs.highlightElement(viewerContentElement.querySelector('code'));
                     }
                 }
             } else if (fileItem.html_url) {
-                // Für alle anderen Dateien (PDFs, Bilder, Zips)
+                // Für alle anderen Binärdateien (Bilder, Zips, etc.)
                 viewerContentElement.innerHTML = `
                     <div class="alert alert-info" role="alert">
                         Dies ist keine direkt anzeigbare Textdatei (${fileItem.name.split('.').pop().toUpperCase()}-Format).
@@ -390,6 +483,9 @@
                         <p class="mt-2 mb-0 small">Bitte nutze diesen Link, um die Datei anzuzeigen.</p>
                     </div>
                 `;
+            } else {
+                fullscreenToggle.style.display = 'none'; 
+                viewerContentElement.innerHTML = '<p class="text-muted">Inhalt konnte nicht geladen werden.</p>';
             }
         }
         
@@ -399,7 +495,6 @@
         function updateBreadcrumb() {
             breadcrumbListElement.innerHTML = '';
             
-            // Startpunkt: Root
             const homeItem = document.createElement('li');
             homeItem.classList.add('breadcrumb-item');
             homeItem.innerHTML = `<a href="#" onclick="loadPath('')" class="link-primary">Hauptverzeichnis</a>`;
