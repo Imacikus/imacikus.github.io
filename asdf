@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>🎄 Adventskalender – Tag 08</title>
+  <title>🎄 Adventskalender – Tag 07</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body::before {
@@ -22,8 +22,8 @@
 </head>
 <body class="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-200 to-red-400 text-white font-sans">
   <main class="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-11/12 sm:w-3/4 md:w-1/2 text-center border border-white/30">
-    <h1 class="text-4xl font-bold mb-2">🎁 Tag 08 – Kerzenlicht</h1>
-    <p class="text-sm text-white/90 mb-4">📅 8. Dezember 2025</p>
+    <h1 class="text-4xl font-bold mb-2">🎁 Tag 07 – Kerzenlicht</h1>
+    <p class="text-sm text-white/90 mb-4">📅 7. Dezember 2025</p>
     <section class="bg-white/10 rounded-xl p-4 mb-4">
       <p class="text-md leading-relaxed text-left">Zünde das Teelicht an und denk an schöne
 Dinge.</p>
@@ -32,7 +32,7 @@ Dinge.</p>
       <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExenA1NmN0bWt2b3V5c2Z3eXRxeXEzZzRlcjl4MTZkanNtbWkwY25hcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3stKGUOv4W779xzuQN/giphy.gif" alt="Weihnachten" class="mx-auto rounded-xl shadow-lg max-h-48" />
     </div>
     <div class="mt-4">
-      <a href="https://imacikus.github.io/adventskalender/tag08.html" class="inline-block bg-white text-red-600 font-semibold px-4 py-2 rounded-xl shadow hover:bg-red-50 transition">👉 QR-Link öffnen</a>
+      <a href="https://imacikus.github.io/adventskalender/tag07.html" class="inline-block bg-white text-red-600 font-semibold px-4 py-2 rounded-xl shadow hover:bg-red-50 transition">👉 QR-Link öffnen</a>
     </div>
   </main>
   <footer class="absolute bottom-4 w-full text-center text-white/80 text-sm">
