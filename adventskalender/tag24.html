@@ -1,126 +1,202 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎄 Adventskalender – Tag 24</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-body::before {
-  content:"";
-  position:fixed;
-  inset:0;
-  background:url("https://cdn.jsdelivr.net/gh/nikitavoloboev/unsplash-wallpapers/snowfall.gif");
-  background-size:cover;
-  opacity:.12;
-  z-index:-1;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>24. Dezember - Das Finale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&family=Poppins:wght@900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: radial-gradient(circle at center, #3d0000 0%, #000000 100%);
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            perspective: 1200px;
+        }
 
-#door24 {
-  width: 120px;
-  height: 160px;
-  background: #f59e0b;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-  font-weight: bold;
-  cursor: pointer;
-  margin: auto;
-  position: relative;
-  top: 50px;
-  transition: transform 0.7s ease-in-out;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
+        /* Goldener Glanz Effekt */
+        .gold-glow {
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 165, 0, 0.5);
+        }
 
-#door24.open {
-  transform: rotateY(180deg);
-}
+        /* Haupt-Tür 24 */
+        #door-wrapper {
+            position: relative;
+            z-index: 100;
+            transition: all 1s ease-in-out;
+        }
 
-#parade {
-  position: absolute;
-  top: 220px;
-  left: 100%;
-  display: flex;
-  gap: 10px;
-}
+        .door-24 {
+            width: 180px;
+            height: 250px;
+            background: linear-gradient(145deg, #b8860b, #ffd700);
+            border: 6px solid #5d4037;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            font-family: 'Mountains of Christmas';
+            color: #3d0000;
+            cursor: pointer;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+            transform-origin: left;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-.parade-door {
-  width: 50px;
-  height: 70px;
-  background: #f87171;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: white;
-  font-size: 1.2rem;
-  transform: rotate(-10deg);
-}
+        .door-24.open {
+            transform: rotateY(-140deg);
+        }
 
-#message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  font-size: 2rem;
-  font-weight: bold;
-  color: #facc15;
-  text-shadow: 0 0 10px #facc15, 0 0 20px #fcd34d;
-  transition: transform 1s ease-in-out;
-}
-#message.show {
-  transform: translate(-50%, -50%) scale(1);
-}
-</style>
+        /* Die Parade der fliegenden Tage */
+        #parade-track {
+            position: absolute;
+            top: 50%;
+            left: 100%; /* Startet rechts außerhalb */
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            pointer-events: none;
+            z-index: 10;
+            transform: translateY(-50%) rotate(-8deg); /* Schräglage */
+        }
+
+        .flying-day {
+            min-width: 80px;
+            height: 110px;
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            border: 3px solid #ffd700;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffd700;
+            font-weight: 900;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transition: transform 0.5s ease;
+        }
+
+        /* Finale Nachricht */
+        #outro {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            text-align: center;
+            z-index: 200;
+            width: 100%;
+            pointer-events: none;
+            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .headline {
+            font-family: 'Mountains of Christmas';
+            font-size: clamp(3rem, 12vw, 6rem);
+            background: linear-gradient(to bottom, #fff, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.7));
+        }
+
+        /* Animation für das Beschleunigen und Größerwerden */
+        @keyframes rush-and-grow {
+            0% { 
+                left: 100%; 
+                transform: translateY(-50%) rotate(-8deg) scale(0.5);
+            }
+            30% {
+                transform: translateY(-50%) rotate(-8deg) scale(0.8);
+            }
+            100% { 
+                left: -4000px; /* Muss weit genug links sein für alle 23 Türen */
+                transform: translateY(-50%) rotate(-8deg) scale(2.5); /* Wird massiv größer */
+            }
+        }
+
+        .start-animation {
+            animation: rush-and-grow 5s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+        }
+    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-200 to-red-500 text-white overflow-hidden">
+<body class="flex items-center justify-center">
 
-<div id="door24">24</div>
-<div id="parade"></div>
-<div id="message">🎄 Heute ist Weihnachten! 🎁</div>
+    <div id="door-wrapper">
+        <div class="door-24" id="mainDoor">24</div>
+    </div>
 
-<script>
-const door = document.getElementById("door24");
-const parade = document.getElementById("parade");
-const message = document.getElementById("message");
+    <div id="parade-track"></div>
 
-door.onclick = () => {
-  door.classList.add("open");
-  if(navigator.vibrate) navigator.vibrate(100);
+    <div id="outro">
+        <h1 class="headline">FROHE<br>WEIHNACHTEN</h1>
+        <div class="text-white text-2xl mt-4 opacity-0" id="subtext">24. DEZEMBER</div>
+    </div>
 
-  setTimeout(startParade, 800);
-}
+    <script>
+        const door = document.getElementById('mainDoor');
+        const wrapper = document.getElementById('door-wrapper');
+        const track = document.getElementById('parade-track');
+        const outro = document.getElementById('outro');
+        const subtext = document.getElementById('subtext');
 
-function startParade(){
-  // Erstelle die Türchen 1-23
-  for(let i=1;i<=23;i++){
-    const div = document.createElement("div");
-    div.className="parade-door";
-    div.textContent=i;
-    div.style.transform = `rotate(${Math.random()*6-3}deg)`; // leichte zufällige Schrägung
-    parade.appendChild(div);
-  }
+        // Erstelle Tage 1-23
+        for(let i=1; i<=23; i++) {
+            const div = document.createElement('div');
+            div.className = 'flying-day';
+            div.innerText = i;
+            track.appendChild(div);
+        }
 
-  let position = window.innerWidth;
-  const interval = setInterval(()=>{
-    position -= 2; // Geschwindigkeit
-    parade.style.left = position + "px";
-    if(position < -parade.scrollWidth){
-      clearInterval(interval);
-      parade.innerHTML="";
-      showMessage();
-    }
-  },16); // ca. 60fps
-}
+        door.onclick = () => {
+            // 1. Initialer Schlag beim Öffnen
+            vibrate([100, 50, 100]);
+            door.classList.add('open');
 
-function showMessage(){
-  message.classList.add("show");
-  if(navigator.vibrate) navigator.vibrate([50,50,50]);
-}
-</script>
+            setTimeout(() => {
+                // 2. 24er Tür zieht sich zurück
+                wrapper.style.transform = "translateZ(-800px) scale(0)";
+                wrapper.style.opacity = "0";
+                
+                // 3. Parade startet
+                setTimeout(triggerParade, 500);
+            }, 1000);
+        };
 
+        function triggerParade() {
+            track.classList.add('start-animation');
+            
+            // 4. Vibration, die mit der Beschleunigung intensiver wird
+            let count = 0;
+            const vibInterval = setInterval(() => {
+                // Kurze Impulse, die schneller aufeinander folgen könnten
+                vibrate(20);
+                count++;
+                if(count > 40) clearInterval(vibInterval);
+            }, 120);
+
+            // 5. Finale nach der Parade
+            setTimeout(() => {
+                showOutro();
+            }, 4800);
+        }
+
+        function showOutro() {
+            outro.style.transform = "translate(-50%, -50%) scale(1.2)";
+            vibrate([0, 200, 100, 200, 100, 500]);
+            
+            setTimeout(() => {
+                subtext.classList.remove('opacity-0');
+                subtext.classList.add('animate-bounce');
+            }, 1000);
+        }
+
+        function vibrate(pattern) {
+            if (navigator.vibrate) {
+                navigator.vibrate(pattern);
+            }
+        }
+    </script>
 </body>
 </html>
