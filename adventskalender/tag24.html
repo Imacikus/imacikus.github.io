@@ -1,42 +1,126 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>🎄 Adventskalender – Tag 24</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('https://cdn.jsdelivr.net/gh/nikitavoloboev/unsplash-wallpapers/snowfall.gif');
-      background-size: cover;
-      opacity: 0.12;
-      z-index: -1;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎄 Adventskalender – Tag 24</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url("https://cdn.jsdelivr.net/gh/nikitavoloboev/unsplash-wallpapers/snowfall.gif");
+  background-size:cover;
+  opacity:.12;
+  z-index:-1;
+}
+
+#door24 {
+  width: 120px;
+  height: 160px;
+  background: #f59e0b;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin: auto;
+  position: relative;
+  top: 50px;
+  transition: transform 0.7s ease-in-out;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+#door24.open {
+  transform: rotateY(180deg);
+}
+
+#parade {
+  position: absolute;
+  top: 220px;
+  left: 100%;
+  display: flex;
+  gap: 10px;
+}
+
+.parade-door {
+  width: 50px;
+  height: 70px;
+  background: #f87171;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 1.2rem;
+  transform: rotate(-10deg);
+}
+
+#message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  font-size: 2rem;
+  font-weight: bold;
+  color: #facc15;
+  text-shadow: 0 0 10px #facc15, 0 0 20px #fcd34d;
+  transition: transform 1s ease-in-out;
+}
+#message.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+</style>
 </head>
-<body class="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-200 to-red-400 text-white font-sans">
-  <main class="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-11/12 sm:w-3/4 md:w-1/2 text-center border border-white/30">
-    <h1 class="text-4xl font-bold mb-2">🎁 Tag 24 – Heiligabend-Überraschung</h1>
-    <p class="text-sm text-white/90 mb-4">📅 24. Dezember 2025</p>
-    <section class="bg-white/10 rounded-xl p-4 mb-4">
-      <p class="text-md leading-relaxed text-left">Großes Finale: Ein Geschenk und ein langer persönlicher
-Brief. Frohe Weihnachten! ❤️</p>
-    </section>
-    <div class="mb-4">
-      <img src="https://media.giphy.com/media/26gslDq6k3tYJcT3y/giphy.gif" alt="Weihnachten" class="mx-auto rounded-xl shadow-lg max-h-48" />
-    </div>
-    <div class="mt-4">
-      <a href="https://imacikus.github.io/adventskalender/tag24.html" class="inline-block bg-white text-red-600 font-semibold px-4 py-2 rounded-xl shadow hover:bg-red-50 transition">👉 QR-Link öffnen</a>
-    </div>
-  </main>
-  <footer class="absolute bottom-4 w-full text-center text-white/80 text-sm">
-    <p>© 2025 Adventskalender von Linux 🎄</p>
-  </footer>
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-200 to-red-500 text-white overflow-hidden">
+
+<div id="door24">24</div>
+<div id="parade"></div>
+<div id="message">🎄 Heute ist Weihnachten! 🎁</div>
+
+<script>
+const door = document.getElementById("door24");
+const parade = document.getElementById("parade");
+const message = document.getElementById("message");
+
+door.onclick = () => {
+  door.classList.add("open");
+  if(navigator.vibrate) navigator.vibrate(100);
+
+  setTimeout(startParade, 800);
+}
+
+function startParade(){
+  // Erstelle die Türchen 1-23
+  for(let i=1;i<=23;i++){
+    const div = document.createElement("div");
+    div.className="parade-door";
+    div.textContent=i;
+    div.style.transform = `rotate(${Math.random()*6-3}deg)`; // leichte zufällige Schrägung
+    parade.appendChild(div);
+  }
+
+  let position = window.innerWidth;
+  const interval = setInterval(()=>{
+    position -= 2; // Geschwindigkeit
+    parade.style.left = position + "px";
+    if(position < -parade.scrollWidth){
+      clearInterval(interval);
+      parade.innerHTML="";
+      showMessage();
+    }
+  },16); // ca. 60fps
+}
+
+function showMessage(){
+  message.classList.add("show");
+  if(navigator.vibrate) navigator.vibrate([50,50,50]);
+}
+</script>
+
 </body>
 </html>
