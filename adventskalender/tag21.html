@@ -21,22 +21,59 @@
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-200 to-red-400 text-white font-sans">
+
   <main class="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-11/12 sm:w-3/4 md:w-1/2 text-center border border-white/30">
-    <h1 class="text-4xl font-bold mb-2">🎁 Tag 21 – Mini-Quiz</h1>
+
+    <h1 class="text-4xl font-bold mb-2">🎁 Tag 21 – Lustiges Rätsel</h1>
     <p class="text-sm text-white/90 mb-4">📅 21. Dezember 2025</p>
-    <section class="bg-white/10 rounded-xl p-4 mb-4">
-      <p class="text-md leading-relaxed text-left">Kleines Quiz über dich: 3 Fragen, 1 kleine Belohnung bei
-3/3.</p>
+
+    <section class="bg-white/10 rounded-xl p-4 mb-4 text-left">
+      <p class="text-md leading-relaxed">
+        🤔 <strong>Rätsel:</strong><br>
+        Ein Mann steht im Regen, aber kein Haar auf seinem Kopf wird nass.<br>
+        Er hat keinen Schirm, keine Kapuze und steht nicht unter einem Dach.<br>
+        <strong>Warum?</strong>
+      </p>
     </section>
+
     <div class="mb-4">
-      <img src="https://media.giphy.com/media/3oEjHWbXcpeKhTktXi/giphy.gif" alt="Weihnachten" class="mx-auto rounded-xl shadow-lg max-h-48" />
+      <input
+        id="answer"
+        type="text"
+        placeholder="Deine Antwort hier eingeben…"
+        class="w-full p-3 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-400"
+      />
     </div>
-    <div class="mt-4">
-      <a href="https://imacikus.github.io/adventskalender/tag21.html" class="inline-block bg-white text-red-600 font-semibold px-4 py-2 rounded-xl shadow hover:bg-red-50 transition">👉 QR-Link öffnen</a>
-    </div>
+
+    <button
+      onclick="checkAnswer()"
+      class="bg-white text-red-600 font-semibold px-6 py-2 rounded-xl shadow hover:bg-red-50 transition"
+    >
+      Antwort prüfen
+    </button>
+
+    <p id="result" class="mt-4 font-semibold"></p>
+
   </main>
+
   <footer class="absolute bottom-4 w-full text-center text-white/80 text-sm">
     <p>© 2025 Adventskalender von Linux 🎄</p>
   </footer>
+
+  <script>
+    function checkAnswer() {
+      const input = document.getElementById("answer").value.toLowerCase();
+      const result = document.getElementById("result");
+
+      if (input.includes("glatze")) {
+        result.textContent = "🎉 Richtig! Er hat eine Glatze 😄";
+        result.className = "mt-4 font-semibold text-green-200";
+      } else {
+        result.textContent = "❌ Noch nicht ganz… Denk nochmal nach 😉";
+        result.className = "mt-4 font-semibold text-yellow-200";
+      }
+    }
+  </script>
+
 </body>
 </html>
