@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>PhotoBox - Download & Number System</title>
+    <style>
+        :root {
+            --accent: #00f2fe;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at center, #1a1a2e, #0a0a0c);
+            color: white; overflow: hidden;
+        }
+
+        .screen { display: none; position: absolute; inset: 0; flex-direction: column; align-items: center; justify-content: center; }
+        .active { display: flex; }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px; padding: 2rem; text-align: center;
+        }
+
+        /* --- Camera & Sidebar --- */
+        .booth-container { display: grid; grid-template-columns: 1fr 220px; gap: 20px; width: 90%; height: 75%; }
+        #cam-area { position: relative; border-radius: 20px; overflow: hidden; background: black; border: 2px solid var(--accent); }
+        video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        #countdown { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10rem; font-weight: bold; }
+
+        /* --- Result View --- */
+        #final-strip-wrapper { 
+            background: white; padding: 5px; display: inline-block; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.5); 
+        }
+        .preview-img { width: 200px; display: block; margin-bottom: 2px; }
+        
+        .id-display {
+            font-size: 3rem; color: var(--accent); margin: 10px 0; font-weight: bold;
+        }
+
+        .btn {
+            padding: 15px 35px; border-radius: 50px; border: none;
+            font-weight: bold; cursor: pointer; margin: 5px; transition: 0.2s;
+        }
+        .btn-download { background: var(--accent); color: black; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+
+    <div id="screen-start" class="screen active">
+        <div class="glass-card">
+            <h1>FOTOBOX</h1>
+            <p>Wähle einen Modus:</p>
+            <button class="btn" onclick="startBooth(1)">1 Bild</button>
+            <button class="btn" onclick="startBooth(3)">3 Bilder</button>
+            <button class="btn" onclick="startBooth(5)">5 Bilder</button>
+        </div>
+    </div>
+
+    <div id="screen-booth" class="screen">
+        <div class="booth-container">
+            <div id="cam-area">
+                <video id="video" autoplay playsinline></video>
+                <div id="countdown"></div>
+            </div>
+            <div id="sidebar" class="glass-card" style="overflow-y:auto;"></div>
+        </div>
+    </div>
+
+    <div id="screen-result" class="screen">
+        <div class="glass-card">
+            <div id="final-strip-wrapper">
+                <div id="result-container"></div>
+            </div>
+            
+            <div class="id-display" id="photo-id-text">Bild-Nummer: --</div>
+            
+            <div class="controls">
+                <button class="btn" style="background:#555; color:white;" onclick="location.reload()">Abbrechen</button>
+                <button class="btn btn-download" onclick="downloadCollage()">SPEICHERN & NUMMER ERHALTEN</button>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="canvas-export" style="display:none;"></canvas>
+    <canvas id="canvas-cam" style="display:none;"></canvas>
+
+<script>
+    let state = { mode: 1, count: 0, photoID: Date.now().toString().slice(-4) }; // Letzte 4 Ziffern der Zeit als ID
+    const video = document.getElementById('video');
+
+    async function startBooth(m) {
+        state.mode = m;
+        state.count = 0;
+        state.photoID = Math.floor(1000 + Math.random() * 9000); // Zufällige 4-stellige Nummer
+        
+        document.getElementById('result-container').innerHTML = '';
+        document.getElementById('sidebar').innerHTML = '';
+        showScreen('screen-booth');
+
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
+        video.srcObject = stream;
+        setTimeout(cycle, 1000);
+    }
+
+    function cycle() {
+        if (state.count < state.mode) {
+            let timer = 5;
+            const cd = document.getElementById('countdown');
+            cd.innerText = timer;
+            const interval = setInterval(() => {
+                timer--;
+                cd.innerText = timer;
+                if (timer <= 0) {
+                    clearInterval(interval);
+                    cd.innerText = "SMILE!";
+                    setTimeout(() => {
+                        takeSnap();
+                        state.count++;
+                        cd.innerText = "";
+                        setTimeout(cycle, 1200);
+                    }, 500);
+                }
+            }, 1000);
+        } else {
+            document.getElementById('photo-id-text').innerText = "Bild-Nummer: " + state.photoID;
+            showScreen('screen-result');
+        }
+    }
+
+    function takeSnap() {
+        const camCanvas = document.getElementById('canvas-cam');
+        camCanvas.width = video.videoWidth;
+        camCanvas.height = video.videoHeight;
+        const ctx = camCanvas.getContext('2d');
+        ctx.translate(camCanvas.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(video, 0, 0);
+        
+        const data = camCanvas.toDataURL('image/jpeg');
+
+        // Anzeige im Result
+        const r = document.createElement('img');
+        r.src = data; r.className = 'preview-img';
+        document.getElementById('result-container').appendChild(r);
+
+        // Anzeige Sidebar
+        const s = document.createElement('img');
+        s.src = data; s.style.width = "100%"; s.style.marginBottom = "5px";
+        document.getElementById('sidebar').prepend(s);
+    }
+
+    function downloadCollage() {
+        const container = document.getElementById('result-container');
+        const imgs = container.getElementsByTagName('img');
+        const exportCanvas = document.getElementById('canvas-export');
+        const ctx = exportCanvas.getContext('2d');
+
+        // Berechne Gesamtgröße der Collage
+        exportCanvas.width = imgs[0].naturalWidth;
+        exportCanvas.height = imgs[0].naturalHeight * state.mode;
+
+        for (let i = 0; i < imgs.length; i++) {
+            ctx.drawImage(imgs[i], 0, i * imgs[0].naturalHeight);
+        }
+
+        // Download triggern
+        const link = document.createElement('a');
+        link.download = `Foto_${state.photoID}.jpg`;
+        link.href = exportCanvas.toDataURL('image/jpeg', 0.9);
+        link.click();
+
+        alert("Gespeichert unter Nummer: " + state.photoID + ". Bitte gehe zum Druck-Counter.");
+        location.reload();
+    }
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+</script>
+</body>
+</html>
