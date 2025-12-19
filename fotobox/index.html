@@ -7,6 +7,7 @@
     <style>
         :root {
             --accent: #00f2fe;
+            --accent-glow: rgba(0, 242, 254, 0.4);
             --glass: rgba(255, 255, 255, 0.08);
             --glass-strong: rgba(255, 255, 255, 0.15);
         }
@@ -41,7 +42,7 @@
         #countdown { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 15rem; font-weight: 900; text-shadow: 0 0 40px var(--accent); }
 
         /* Glass Cards & Buttons */
-        .glass-card { background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); border-radius: 40px; padding: 3rem; text-align: center; }
+        .glass-card { background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); border-radius: 40px; padding: 3rem; text-align: center; position: relative; }
         
         .btn-mode { 
             width: 200px; padding: 30px 10px; cursor: pointer; border-radius: 30px; 
@@ -50,7 +51,32 @@
         }
         .btn-mode:hover { border-color: var(--accent); transform: translateY(-10px); background: var(--glass-strong); }
         
-        /* Preisschild Design */
+        /* Bestseller Highlight */
+        .btn-mode.highlight {
+            border: 2px solid var(--accent);
+            background: rgba(0, 242, 254, 0.05);
+            box-shadow: 0 0 30px var(--accent-glow);
+            transform: scale(1.05);
+        }
+        .btn-mode.highlight:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        /* Bestseller Badge */
+        .badge {
+            position: absolute;
+            top: -15px;
+            background: var(--accent);
+            color: #0a0a12;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+        }
+
         .price-tag {
             font-weight: 900; color: var(--accent); font-size: 1.5rem; margin-top: 10px;
             background: rgba(0, 242, 254, 0.15); padding: 5px 20px; border-radius: 15px;
@@ -72,15 +98,18 @@
 
     <div id="screen-start" class="screen active">
         <h1 style="letter-spacing: 10px; font-weight: 900; margin-bottom: 40px;">FOTOBOX 10C</h1>
-        <div style="display: flex;">
+        <div style="display: flex; align-items: center;">
             <div class="glass-card btn-mode" onclick="startBooth(1)">
                 <h2>1er</h2><p>Einzelbild</p>
                 <div class="price-tag">1€</div>
             </div>
-            <div class="glass-card btn-mode" onclick="startBooth(3)">
+
+            <div class="glass-card btn-mode highlight" onclick="startBooth(3)">
+                <div class="badge">Bestseller</div>
                 <h2>3er</h2><p>Streifen</p>
                 <div class="price-tag">2€</div>
             </div>
+
             <div class="glass-card btn-mode" onclick="startBooth(5)">
                 <h2>5er</h2><p>Serie</p>
                 <div class="price-tag">3€</div>
@@ -147,7 +176,7 @@
 
     function cycle() {
         if (state.count < state.mode) {
-            let timer = 5; // BLEIBT STRENG BEI 5 SEKUNDEN
+            let timer = 5; // Countdown bleibt fix bei 5 Sekunden
             const cd = document.getElementById('countdown');
             cd.innerText = timer;
             const interval = setInterval(() => {
