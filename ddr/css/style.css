@@ -75,3 +75,9 @@ h2 {
   font-size:1.6rem;
   opacity:.9;
 }
+#confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+}
