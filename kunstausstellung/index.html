@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kunstausstellung | Handwerkskammer</title>
+    <style>
+        /* CSS - Design & Layout */
+        :root {
+            --primary: #2c3e50; /* Dunkles Blau/Anthrazit */
+            --accent: #b8860b;  /* Gold/Messing-Ton */
+            --bg: #f9f9f9;
+            --text: #333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg);
+            color: var(--text);
+            scroll-behavior: smooth;
+        }
+
+        header {
+            height: 60vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=1200&q=80'); /* Platzhalterbild Kunst */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        header h1 { font-size: 3rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+        header p { font-size: 1.2rem; font-style: italic; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+
+        .info-section { text-align: center; margin-bottom: 60px; }
+        .info-section h2 { color: var(--accent); margin-bottom: 15px; }
+
+        /* Galerie Grid */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .art-card {
+            background: white;
+            border-bottom: 4px solid var(--accent);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .art-card:hover { transform: translateY(-5px); }
+        .art-card img { width: 100%; height: 250px; object-fit: cover; display: block; }
+        .art-card-info { padding: 15px; }
+        .art-card-info h3 { font-size: 1.1rem; margin-bottom: 5px; }
+        .art-card-info p { color: #777; font-size: 0.9rem; }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+
+        /* Interaktiver Button */
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            text-decoration: none;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+        .btn:hover { background: var(--accent); color: white; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Architektur der Zukunft - Film Fassaden und Fantasy</h1>
+        <p>Ausstellung der Kunstkurse | Klasse 10</p>
+    </header>
+
+    <div class="container">
+        <section class="info-section">
+            <h2>Willkommen</h2>
+            <p>Erlebt die Kunstausstellung mit den Projekten der Schüler der Kunstkurse der 10. Klasse.</p>
+            <p><strong>Wann:</strong> 28. Januar - Mittagsband | <strong>Wo:</strong> Handwerkskammer</p>
+            <a href="#galerie" class="btn">Werke ansehen</a>
+        </section>
+
+        <div id="galerie" class="gallery">
+            <article class="art-card" onclick="showAlert('Skulptur aus Eichenholz')">
+                <img src="https://images.unsplash.com/photo-1544411047-c49158422e3b?auto=format&fit=crop&w=500&q=80" alt="Kunst">
+                <div class="art-card-info">
+                    <h3>asdfsf</h3>
+                    <p>Max Mustermann | jhjdj</p>
+                </div>
+            </article>
+
+            <article class="art-card" onclick="showAlert('Abstrakte Schmiedearbeit')">
+                <img src="https://images.unsplash.com/photo-1513519245088-0e12902e35ca?auto=format&fit=crop&w=500&q=80" alt="Kunst">
+                <div class="art-card-info">
+                    <h3>asdf</h3>
+                    <p>Max Musterfrau | asdf</p>
+                </div>
+            </article>
+
+            <article class="art-card" onclick="showAlert('Mosaik aus Keramik')">
+                <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=500&q=80" alt="Kunst">
+                <div class="art-card-info">
+                    <h3>asdf</h3>
+                    <p>Max Mustermann | asdf</p>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Kunstprojekt der 10. Klasse. Alle Rechte vorbehalten.</p>
+        <p><small>Handwerkskammer Evangelisches Gymnasium | Mittagsband 28 Januar</small></p>
+    </footer>
+
+    <script>
+        // JS - Ein wenig Interaktion
+        function showAlert(title) {
+            alert("Sie betrachten Details zu: " + title + "\n(Hier könnte sich eine Bilder-Galerie öffnen!)");
+        }
+
+        // Kleiner Effekt beim Scrollen
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            let scrollPos = window.scrollY;
+            header.style.backgroundPositionY = (scrollPos * 0.5) + 'px';
+        });
+    </script>
+</body>
+</html>
