@@ -3,82 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio & Blog | Modern Design</title>
+    <title>Imacikus | Portfolio & Blog</title>
+    <meta name="description" content="Portfolio von Imacikus - Entwickler von Borin AI und Blogger über Technik und Politik.">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
-            background-color: #0f172a;
-        }
-        .glass {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #22d3ee 0%, #6366f1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #22d3ee 0%, #6366f1 100%);
-        }
-        .card-hover:hover {
-            transform: translateY(-4px);
-            border-color: rgba(34, 211, 238, 0.3);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        
-        /* Page transition animation */
-        .fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
-<link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="index.css">
 </head>
-<body class="text-slate-200">
-    <!-- Navigation -->
+<body class="text-slate-200 bg-[#0f172a]">
+
     <nav class="fixed top-0 left-0 right-0 z-50 glass">
         <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div onclick="navigateTo('home')" class="text-xl font-bold cursor-pointer gradient-text tracking-tighter">MEINPORTFOLIO.</div>
-            <div class="flex gap-6 sm:gap-10">
-                <button onclick="navigateTo('home')" class="nav-link flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-cyan-400 transition-colors" data-page="home">
-                    <i data-lucide="user" class="w-4 h-4"></i> Home
+            <div onclick="navigateTo('home')" class="text-xl font-bold cursor-pointer gradient-text tracking-tighter italic">IMACIKUS.</div>
+            <div class="flex gap-6">
+                <button onclick="navigateTo('home')" class="nav-link flex items-center gap-2 text-sm font-medium transition-colors" data-page="home">
+                    <i data-lucide="home" class="w-4 h-4"></i> Home
                 </button>
-                <button onclick="navigateTo('blog')" class="nav-link flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-cyan-400 transition-colors" data-page="blog">
+                <button onclick="navigateTo('blog')" class="nav-link flex items-center gap-2 text-sm font-medium transition-colors" data-page="blog">
                     <i data-lucide="book-open" class="w-4 h-4"></i> Blog
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content Container -->
     <main id="app-root" class="pt-24 min-h-screen">
-        <!-- JS will render content here -->
+        <div class="max-w-4xl mx-auto px-6 py-12 text-center">
+            <h1 class="text-4xl font-bold">Lade Portfolio...</h1>
+            <p class="text-slate-400 mt-4">Willkommen bei Imacikus. Einen Moment Geduld bitte.</p>
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-800/50 py-12 px-6 mt-20">
+    <footer class="border-t border-slate-800/50 py-12 px-6 mt-20 bg-[#0f172a]">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-            <p class="text-slate-500 text-sm">© 2024 Dein Name. Gebaut mit reinem JavaScript.</p>
+            <div>
+                <span class="font-bold gradient-text italic">IMACIKUS</span>
+                <p class="text-slate-500 text-xs mt-1">© 2026 Alle Rechte vorbehalten.</p>
+            </div>
             <div class="flex gap-6">
-                <a href="#" class="text-slate-500 hover:text-white transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
-                <a href="#" class="text-slate-500 hover:text-white transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></a>
+                <a href="https://github.com/imacikus" target="_blank" class="text-slate-500 hover:text-white transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                <a href="mailto:deine-email@beispiel.de" class="text-slate-500 hover:text-white transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></a>
             </div>
         </div>
     </footer>
 
-    <script type="module" src="index.tsx"></script>
-<script type="module" src="/index.tsx"></script>
+    <script src="index.js"></script>
 </body>
 </html>
