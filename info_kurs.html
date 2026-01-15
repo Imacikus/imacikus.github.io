@@ -14,7 +14,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
-        /* --- Eigene Grün-Definition (ersetzt Primary von Bootstrap) --- */
+        /* --- Eigene Grün-Definition --- */
         :root, [data-bs-theme="light"] {
             --bs-primary: #3fb687;
             --bs-primary-rgb: 63, 182, 135; 
@@ -32,8 +32,6 @@
             --bs-secondary-bg: #272727;
         }
 
-        /* --- Allgemeine Stile --- */
-        
         [data-bs-theme="light"] .bg-primary {
             color: #121212 !important;
         }
@@ -58,7 +56,6 @@
             margin-right: 10px;
         }
         
-        /* Hervorhebung des aktiven Elements */
         .file-item.active {
             background-color: var(--bs-primary) !important;
             color: var(--bs-body-bg) !important; 
@@ -68,13 +65,11 @@
             color: var(--bs-body-color) !important;
         }
 
-        /* Footer-Style für das Easter Egg */
         .footer-easter-egg {
             cursor: pointer; 
             user-select: none; 
         }
 
-        /* Styling für den Code/Text-Viewer */
         .content-viewer pre {
             padding: 0;
             border-radius: 0.3rem;
@@ -95,7 +90,6 @@
             border: 1px solid var(--bs-border-color);
         }
         
-        /* Vollbild-Modus Styling */
         .content-viewer.fullscreen {
             position: fixed;
             top: 0;
@@ -114,15 +108,7 @@
             flex-direction: column;
         }
         
-        .content-viewer.fullscreen #viewer-content iframe,
-        .content-viewer.fullscreen #viewer-content pre,
-        .content-viewer.fullscreen .markdown-body {
-            flex-grow: 1; 
-            height: 100%;
-            margin-top: 10px;
-        }
-        
-        /* --- CHATBOT STYLES (WICHTIG: Z-INDEX erhöht) --- */
+        /* --- CHATBOT STYLES --- */
         .chatbot-container {
             position: fixed;
             bottom: 100px;
@@ -131,7 +117,7 @@
             height: 450px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             border-radius: 0.5rem;
-            z-index: 1020; /* Erhöhter Z-Index */
+            z-index: 1020;
             display: flex;
             flex-direction: column;
             background-color: var(--bs-card-bg);
@@ -156,7 +142,6 @@
             align-items: center;
         }
         
-        /* Sicherstellen der Lesbarkeit des Textes im Primary-Header (Dark Mode) */
         [data-bs-theme="dark"] .chatbot-header {
             color: var(--bs-body-color) !important;
         }
@@ -171,7 +156,6 @@
             flex-direction: column;
         }
         
-        /* Nachrichten-Styling */
         .chat-message {
             max-width: 80%;
             margin-bottom: 10px;
@@ -194,11 +178,8 @@
 
         .chatbot-footer {
             padding: 10px;
-            border-bottom-left-radius: 0.5rem;
-            border-bottom-right-radius: 0.5rem;
         }
         
-        /* Chat Toggle Button */
         .chatbot-toggle-btn {
             position: fixed;
             bottom: 20px;
@@ -214,17 +195,19 @@
             align-items: center;
             cursor: pointer;
             font-size: 28px;
-            z-index: 1030; /* Höchster Z-Index, damit er immer klickbar ist */
-            text-decoration: none; /* Stellt sicher, dass keine ungewollten Stile von A-Tags übernommen werden */
+            z-index: 1030;
         }
-         /* Sicherstellen der Lesbarkeit des Icons im Dark Mode */
+
         [data-bs-theme="dark"] .chatbot-toggle-btn {
             color: var(--bs-body-color);
         }
-
     </style>
 </head>
 <body>
+
+    <div class="alert alert-warning mb-0 text-center rounded-0 border-0 fw-bold" role="alert">
+        📢 Hausaufgabe: S.81 Nr. 2 und 3
+    </div>
 
     <header class="bg-primary text-white p-4 mb-4">
         <div class="container d-flex justify-content-between align-items-center">
@@ -237,15 +220,12 @@
     </header>
 
     <div class="container">
-        
         <div class="row">
-            
             <div class="col-lg-6">
                 <div class="file-browser card card-body mb-4">
                     <h3>📁 Kursmaterialien</h3>
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb" id="breadcrumb-list">
-                            </ol>
+                        <ol class="breadcrumb" id="breadcrumb-list"></ol>
                     </nav>
                     <div id="file-list" class="list-group">
                         <div class="text-center p-5 text-muted">Lade Inhalte...</div>
@@ -255,68 +235,52 @@
 
             <div class="col-lg-6">
                 <div class="content-viewer card card-body mb-4" id="content-viewer-container">
-                    
                     <div class="d-flex justify-content-between align-items-center">
                         <h3 id="viewer-title" class="mb-0">Inhalts-Vorschau</h3>
                         <button id="fullscreen-toggle" class="btn btn-sm btn-outline-secondary" title="Vollbild umschalten" style="display:none;">
                             <span class="fullscreen-icon">⛶</span>
                         </button>
                     </div>
-                    
                     <hr class="mt-2 mb-3"> 
-                    
                     <div id="viewer-content">
-                        <p class="text-muted">Wähle eine Datei aus der linken Liste, um den Inhalt anzuzeigen.</p>
+                        <p class="text-muted">Wähle eine Datei aus der linken Liste.</p>
                     </div>
                 </div>
             </div>
-            
         </div>
-        
+
         <div class="row mt-5">
             <div class="col-12">
                 <div class="file-browser card card-body">
                     <h3>❓ FAQ (Häufige Fragen)</h3>
                     <div class="accordion" id="faqAccordion">
-                        
                         <div class="accordion-item">
-                            <h2 class="accordion-header"><button class="accordion-button bg-secondary-subtle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true">Wie navigiere ich zu einem anderen Schuljahr?</button></h2>
-                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion"><div class="accordion-body">Klicke einfach auf die Ordner in der linken Spalte. Der Pfad wird oben im Menü angezeigt und dient zur einfachen Rückkehr.</div></div>
+                            <h2 class="accordion-header"><button class="accordion-button bg-secondary-subtle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">Wie navigiere ich?</button></h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion"><div class="accordion-body">Klicke auf Ordner links. Nutze die Brotkrümel-Leiste oben, um zurückzugehen.</div></div>
                         </div>
-                        
                         <div class="accordion-item">
-                            <h2 class="accordion-header"><button class="accordion-button collapsed bg-secondary-subtle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false">Was tun, wenn eine Datei nicht angezeigt wird?</button></h2>
-                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Die Website kann nur Text-basierte Dateien direkt anzeigen. Für Binärdateien erhaltet Ihr einen Link, um die Datei direkt auf GitHub zu öffnen oder herunterzuladen.</div></div>
+                            <h2 class="accordion-header"><button class="accordion-button collapsed bg-secondary-subtle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">Datei wird nicht angezeigt?</button></h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Nur Text/PDF gehen direkt. Andere Dateien haben einen GitHub-Link zum Download.</div></div>
                         </div>
-                        
-                        <div class="accordion-item">
-                            <h2 class="accordion-header"><button class="accordion-button collapsed bg-secondary-subtle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false">Wie schalte ich den Dark Mode aus?</button></h2>
-                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Nutzt einfach den 🌙 Dark Mode Schalter oben rechts im Header. Die Präferenz wird für zukünftige Besuche gespeichert.</div></div>
-                        </div>
-                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="doomModal" tabindex="-1" aria-labelledby="doomModalLabel" aria-hidden="true">
+    <div class="modal fade" id="doomModal" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header bg-primary text-dark">
-            <h5 class="modal-title" id="doomModalLabel">Die ultimative Informatik-Frage!</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title">Die ultimative Informatik-Frage!</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
             <p class="lead">Was ist die korrekte Antwort auf **1 + 1**?</p>
-            <div class="input-group mb-3">
-              <span class="input-group-text">Antwort:</span>
-              <input type="number" class="form-control" id="doomAnswer" placeholder="Geben Sie hier die magische Zahl ein...">
-            </div>
+            <input type="number" class="form-control" id="doomAnswer" placeholder="Zahl eingeben...">
             <div id="doomMessage" class="mt-2 text-danger"></div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
             <button type="button" class="btn btn-primary" id="doomSubmit">Absenden</button>
           </div>
         </div>
@@ -328,32 +292,27 @@
             <span class="h6 mb-0">🤖 Info-Assistent</span>
             <button class="btn-close" onclick="document.getElementById('chatbot-container').classList.remove('open')"></button>
         </div>
-        <div class="chatbot-body" id="chat-messages">
-            </div>
+        <div class="chatbot-body" id="chat-messages"></div>
         <div class="chatbot-footer">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Frage stellen (z.B. PDF, Dark Mode, Code)..." id="chat-input">
+                <input type="text" class="form-control" placeholder="Frage stellen..." id="chat-input">
                 <button class="btn btn-primary" type="button" id="chat-send-btn">Senden</button>
             </div>
         </div>
     </div>
 
-    <div class="chatbot-toggle-btn" id="chatbot-toggle">
-        💬
-    </div>
+    <div class="chatbot-toggle-btn" id="chatbot-toggle">💬</div>
 
     <footer class="bg-dark text-white text-center p-3 mt-5 footer-easter-egg" data-bs-toggle="modal" data-bs-target="#doomModal">
         &copy; 2025 Imacikus - Informatikkurs 
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
         const REPO_OWNER = 'Imacikus';
         const REPO_NAME = 'Informatikuntericht';
         const GITHUB_API_BASE = 'https://api.github.com';
         
-        // DOM-Elemente
         const htmlElement = document.documentElement;
         const darkModeToggle = document.getElementById('darkModeToggle');
         const fileListElement = document.getElementById('file-list');
@@ -363,341 +322,100 @@
         const contentViewerContainer = document.getElementById('content-viewer-container');
         const fullscreenToggle = document.getElementById('fullscreen-toggle');
         
-        // Elemente für das Easter Egg
-        const doomAnswerInput = document.getElementById('doomAnswer');
-        const doomSubmitButton = document.getElementById('doomSubmit');
-        const doomMessageElement = document.getElementById('doomMessage');
-        
-        // Elemente für den Chatbot
         const chatbotToggle = document.getElementById('chatbot-toggle');
         const chatbotContainer = document.getElementById('chatbot-container');
         const chatMessages = document.getElementById('chat-messages');
         const chatInput = document.getElementById('chat-input');
         const chatSendBtn = document.getElementById('chat-send-btn');
 
-        // Zustand
         let currentPath = ''; 
         let currentActiveItem = null; 
-        
-        // Regelbasierte Antworten
-        const ChatbotResponses = new Map([
-            ['dark mode', 'Du kannst den Dark Mode mit dem Schalter oben rechts im Header umschalten. Deine Präferenz wird gespeichert.'],
-            ['hell', 'Wenn du den Dark Mode deaktivieren möchtest, nutze den Schalter "🌙 Dark Mode" oben rechts.'],
-            ['ordner', 'Klicke auf die "📂" Ordner-Symbole in der linken Spalte, um in die Unterverzeichnisse zu navigieren.'],
-            ['pfad', 'Der aktuelle Pfad wird über der Dateiliste als Brotkrümelnavigation angezeigt. Klicke dort, um schnell zurückzukehren.'],
-            ['faq', 'Schau in den FAQ-Bereich (Häufige Fragen) unter der Dateiliste. Dort findest du die meisten Antworten.'],
-            ['pdf', 'PDF-Dateien werden im rechten Bereich in einem iFrame angezeigt. Sollte das nicht funktionieren, nutze den Link zum direkten Download auf GitHub.'],
-            ['code', 'Code-Dateien (wie .py, .js, .html) werden mit Syntax-Highlighting (Farbkodierung) im Vorschaubereich dargestellt.'],
-            ['python', 'Python-Dateien (.py) werden mit Syntax-Highlighting (Code-Einfärbung) angezeigt.'],
-            ['vollbild', 'Wenn eine Datei im Vorschau-Fenster ausgewählt ist, klicke auf das ⛶-Symbol neben dem Titel, um die Vollbildansicht zu aktivieren.'],
-            ['herunterladen', 'Für alle nicht-anzeigbaren Dateien (wie ZIPs oder Bilder) findest du einen Link zum Öffnen oder Herunterladen auf GitHub in der Vorschau.'],
-        ]);
 
-
-        // --- DARK MODE LOGIK ---
+        // --- DARK MODE ---
         function setDarkMode(isDark) {
             htmlElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
             localStorage.setItem('darkMode', isDark);
             darkModeToggle.checked = isDark;
-            
-            const label = document.querySelector('label[for="darkModeToggle"]');
-            if (label) {
-                label.classList.toggle('text-white', isDark);
-                label.classList.toggle('text-dark', !isDark);
-            }
-            
-            const hlLink = document.querySelector('link[href*="highlight.js"]');
-            if (hlLink) {
-                const theme = isDark ? 'vs2015' : 'default'; 
-                hlLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${theme}.min.css`;
-            }
         }
-
         const savedDarkMode = localStorage.getItem('darkMode');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setDarkMode(savedDarkMode === 'true');
+        darkModeToggle.addEventListener('change', (e) => setDarkMode(e.target.checked));
         
-        setDarkMode(savedDarkMode === 'true' || (savedDarkMode === null && prefersDark));
-
-        darkModeToggle.addEventListener('change', (e) => {
-            setDarkMode(e.target.checked);
-        });
-        
-        // --- CHATBOT LOGIK ---
-        
+        // --- CHATBOT ---
         function addMessage(text, sender) {
             const msgDiv = document.createElement('div');
             msgDiv.classList.add('chat-message', sender === 'user' ? 'chat-message-user' : 'chat-message-bot');
             msgDiv.textContent = text;
             chatMessages.appendChild(msgDiv);
-            
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        function getBotResponse(userMessage) {
-            const lowerCaseMessage = userMessage.toLowerCase();
-            
-            for (const [keyword, response] of ChatbotResponses.entries()) {
-                if (lowerCaseMessage.includes(keyword)) {
-                    return response;
-                }
-            }
-            
-            return 'Entschuldigung, ich verstehe diese Frage momentan nicht. Bitte versuche es mit Schlüsselwörtern wie "PDF", "Dark Mode", "Code" oder "Vollbild".';
-        }
-
-        function sendMessage() {
-            const message = chatInput.value.trim();
-            if (message === '') return;
-
-            addMessage(message, 'user');
+        chatSendBtn.addEventListener('click', () => {
+            const msg = chatInput.value.trim();
+            if(!msg) return;
+            addMessage(msg, 'user');
             chatInput.value = '';
-            
-            const botResponse = getBotResponse(message);
-            
             setTimeout(() => {
-                addMessage(botResponse, 'bot');
-            }, 500);
-        }
-
-        chatSendBtn.addEventListener('click', sendMessage);
-
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+                if(msg.toLowerCase().includes('hausaufgabe')) {
+                    addMessage('Die Hausaufgabe ist S.81 Nr. 2 und 3. Sie steht auch oben im Banner!', 'bot');
+                } else {
+                    addMessage('Frag mich nach "Hausaufgabe", "Code" oder "PDF".', 'bot');
+                }
+            }, 600);
         });
-        
-        // Chat-Toggle-Button
+
         chatbotToggle.addEventListener('click', () => {
             chatbotContainer.classList.toggle('open');
-            if (chatbotContainer.classList.contains('open')) {
-                // Nur beim ersten Öffnen die Begrüßung anzeigen
-                if (chatMessages.children.length === 0) {
-                    addMessage('Hallo! Ich bin dein Info-Assistent. Wie kann ich dir helfen? (Frage nach "PDF", "Code" oder "Dark Mode")', 'bot');
-                }
-                chatInput.focus();
-            }
+            if(chatMessages.children.length === 0) addMessage('Hallo! Wie kann ich helfen?', 'bot');
         });
 
-        // --- VOLLBILD LOGIK ---
-        function toggleFullscreen() {
-            contentViewerContainer.classList.toggle('fullscreen');
-            
-            const iconSpan = fullscreenToggle.querySelector('.fullscreen-icon');
-            if (contentViewerContainer.classList.contains('fullscreen')) {
-                 iconSpan.textContent = '缩小'; 
-                 iconSpan.title = 'Vollbild verlassen';
-            } else {
-                 iconSpan.textContent = '⛶'; 
-                 iconSpan.title = 'Vollbild umschalten';
-            }
-        }
-
-        fullscreenToggle.addEventListener('click', toggleFullscreen);
-
-        // --- EASTER EGG LOGIK ---
-        doomSubmitButton.addEventListener('click', () => {
-            
-            const modalElement = document.getElementById('doomModal');
-            
-            if (doomAnswerInput.value.trim() === '161') { 
-                
-                const modalInstance = bootstrap.Modal.getInstance(modalElement);
-                if (modalInstance) {
-                    modalInstance.hide(); 
-                }
-                
-                const doomURL = 'https://www.retrogames.cz/play_414-DOS.php'; 
-                window.open(doomURL, 'DoomPopup', 'width=800,height=600,scrollbars=yes,resizable=yes');
-                
-            } else {
-                doomMessageElement.textContent = '❌ Falsche Antwort. Sind Sie sicher, dass Sie Informatik studieren? Versuchen Sie es erneut!';
-                doomAnswerInput.value = '';
-            }
-        });
-        
-        document.getElementById('doomModal').addEventListener('hidden.bs.modal', () => {
-            doomAnswerInput.value = '';
-            doomMessageElement.textContent = '';
-        });
-        
-        // --- GITHUB API & DATEIBROWSER LOGIK ---
-
+        // --- GITHUB & VIEWER ---
         async function fetchGitHubContent(path, raw = false) {
             const url = `${GITHUB_API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
-            const headers = {
-                'Accept': raw ? 'application/vnd.github.v3.raw' : 'application/vnd.github.v3+json'
-            };
-
-            try {
-                const response = await fetch(url, { method: 'GET', headers });
-                
-                if (!response.ok) {
-                    throw new Error(`GitHub API Fehler! Status: ${response.status} (${response.statusText})`);
-                }
-
-                return raw ? response.text() : response.json(); 
-
-            } catch (error) {
-                console.error("Fehler beim Abrufen der GitHub-Inhalte:", error);
-                fileListElement.innerHTML = `<div class="alert alert-danger">Fehler beim Laden: ${error.message}</div>`;
-                return null;
-            }
+            const headers = {'Accept': raw ? 'application/vnd.github.v3.raw' : 'application/vnd.github.v3+json'};
+            const response = await fetch(url, { headers });
+            return raw ? response.text() : response.json();
         }
         
         async function loadPath(path) {
             currentPath = path;
-            
-            fileListElement.innerHTML = `<div class="text-center p-5 text-muted"><div class="spinner-border text-primary" role="status"></div> Lade ${path || 'Hauptverzeichnis'}...</div>`;
+            fileListElement.innerHTML = 'Lade...';
             updateBreadcrumb();
-            
-            if (currentActiveItem) {
-                currentActiveItem.classList.remove('active');
-                currentActiveItem = null;
-            }
-            
-            fullscreenToggle.style.display = 'none';
-            viewerTitleElement.textContent = 'Inhalts-Vorschau';
-            viewerContentElement.innerHTML = '<p class="text-muted">Wähle eine Datei aus der linken Liste, um den Inhalt anzuzeigen.</p>';
-
-
             const contents = await fetchGitHubContent(path);
-
             if (contents && Array.isArray(contents)) {
-                fileListElement.innerHTML = ''; 
-                
-                contents.sort((a, b) => {
-                    if (a.type === 'dir' && b.type !== 'dir') return -1;
-                    if (a.type !== 'dir' && b.type === 'dir') return 1;
-                    return a.name.localeCompare(b.name);
-                });
-
+                fileListElement.innerHTML = '';
                 contents.forEach(item => {
-                    const listItem = document.createElement('a');
-                    listItem.classList.add('file-item', 'list-group-item', 'list-group-item-action');
-                    listItem.setAttribute('title', item.name);
-                    
-                    let icon;
-                    if (item.type === 'dir') {
-                        icon = '📂'; 
-                        listItem.onclick = () => loadPath(item.path);
-                    } else {
-                        if (item.name.match(/\.py$/i)) icon = '🐍'; 
-                        else if (item.name.match(/\.pdf$/i)) icon = '📄';
-                        else if (item.name.match(/\.md$/i)) icon = '📝';
-                        else if (item.name.match(/\.(jpg|png|gif|jpeg)$/i)) icon = '🖼️';
-                        else icon = '📎'; 
-                        
-                        listItem.onclick = (e) => {
-                            if (currentActiveItem) currentActiveItem.classList.remove('active');
-                            listItem.classList.add('active');
-                            currentActiveItem = listItem;
-                            
-                            viewFileContent(item);
-                            
-                            document.getElementById('content-viewer-container').scrollIntoView({ behavior: 'smooth' });
-                        };
-                    }
-                    
-                    listItem.innerHTML = `<span class="file-icon">${icon}</span>${item.name}`;
-                    fileListElement.appendChild(listItem);
+                    const btn = document.createElement('a');
+                    btn.className = 'file-item list-group-item list-group-item-action';
+                    btn.innerHTML = `${item.type === 'dir' ? '📂' : '📄'} ${item.name}`;
+                    btn.onclick = () => item.type === 'dir' ? loadPath(item.path) : viewFile(item);
+                    fileListElement.appendChild(btn);
                 });
             }
         }
-        
-        async function viewFileContent(fileItem) {
-            viewerTitleElement.textContent = `Vorschau: ${fileItem.name}`;
-            viewerContentElement.innerHTML = `<div class="text-center p-4 text-muted"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Lade Datei-Inhalt...</div>`;
-            
-            fullscreenToggle.style.display = 'inline-block';
-            
-            const isCodeFile = fileItem.name.match(/\.(js|css|html|py|json|txt|log)$/i);
-            const isMarkdownFile = fileItem.name.match(/\.md$/i);
-            const isPDFFile = fileItem.name.match(/\.pdf$/i);
-            
-            if (isPDFFile && fileItem.html_url) {
-                
-                const rawUrl = fileItem.html_url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
-                
-                viewerContentElement.innerHTML = `
-                    <div class="alert alert-warning" role="alert">
-                        Lade PDF-Vorschau. Sollte diese nicht funktionieren, nutze bitte den Download-Link unten.
-                    </div>
-                    <iframe src="${rawUrl}" style="width: 100%; height: 100%; min-height: 500px; border: 1px solid var(--bs-border-color);"></iframe>
-                `;
-                
-            } else if (isCodeFile || isMarkdownFile) {
-                
-                const content = await fetchGitHubContent(fileItem.path, true);
-                if (content) {
-                    
-                    if (isMarkdownFile) {
-                        const renderedHtml = marked.parse(content); 
-                        
-                        viewerContentElement.innerHTML = `
-                            <p class="small text-muted">📝 Vorschau:</p>
-                            <div class="markdown-body p-3">${renderedHtml}</div>
-                        `;
 
-                    } else if (isCodeFile) {
-                         const fileExtension = fileItem.name.split('.').pop();
-                         viewerContentElement.innerHTML = `
-                             <p class="small text-muted">📎 Code-Inhalt (Syntax-Highlighting):</p>
-                             <pre><code class="language-${fileExtension}">${content}</code></pre>
-                         `;
-                         hljs.highlightElement(viewerContentElement.querySelector('code'));
-                    }
-                }
-            } else if (fileItem.html_url) {
-                fullscreenToggle.style.display = 'none'; 
-                viewerContentElement.innerHTML = `
-                    <div class="alert alert-info" role="alert">
-                        Dies ist keine direkt anzeigbare Textdatei (${fileItem.name.split('.').pop().toUpperCase()}-Format).
-                        <a href="${fileItem.html_url}" target="_blank" class="alert-link">
-                            Öffnen/Herunterladen auf GitHub (${fileItem.name})
-                        </a>
-                        <p class="mt-2 mb-0 small">Bitte nutze diesen Link, um die Datei anzuzeigen.</p>
-                    </div>
-                `;
+        async function viewFile(file) {
+            viewerTitleElement.textContent = file.name;
+            viewerContentElement.innerHTML = 'Lade Inhalt...';
+            const content = await fetchGitHubContent(file.path, true);
+            if(file.name.endsWith('.md')) {
+                viewerContentElement.innerHTML = `<div class="markdown-body">${marked.parse(content)}</div>`;
             } else {
-                fullscreenToggle.style.display = 'none'; 
-                viewerContentElement.innerHTML = '<p class="text-muted">Inhalt konnte nicht geladen werden.</p>';
+                viewerContentElement.innerHTML = `<pre><code>${content}</code></pre>`;
+                hljs.highlightAll();
             }
         }
-        
-        function updateBreadcrumb() {
-            breadcrumbListElement.innerHTML = '';
-            
-            const homeItem = document.createElement('li');
-            homeItem.classList.add('breadcrumb-item');
-            homeItem.innerHTML = `<a href="#" onclick="loadPath('')" class="link-primary">Hauptverzeichnis</a>`;
-            breadcrumbListElement.appendChild(homeItem);
 
-            if (currentPath) {
-                const parts = currentPath.split('/');
-                let fullPath = '';
-                
-                parts.forEach((part, index) => {
-                    fullPath += (index > 0 ? '/' : '') + part;
-                    const item = document.createElement('li');
-                    
-                    if (index === parts.length - 1) {
-                        item.classList.add('breadcrumb-item', 'active');
-                        item.setAttribute('aria-current', 'page');
-                        item.textContent = part;
-                    } else {
-                        item.classList.add('breadcrumb-item');
-                        const pathForClick = fullPath;
-                        item.innerHTML = `<a href="#" onclick="loadPath('${pathForClick}')" class="link-primary">${part}</a>`;
-                    }
-                    breadcrumbListElement.appendChild(item);
-                });
-            }
+        function updateBreadcrumb() {
+            breadcrumbListElement.innerHTML = '<li class="breadcrumb-item"><a href="#" onclick="loadPath(\'\')">Home</a></li>';
         }
-        
-        // Anwendung starten
+
+        // Easter Egg
+        document.getElementById('doomSubmit').onclick = () => {
+            if(document.getElementById('doomAnswer').value === '161') window.open('https://www.retrogames.cz/play_414-DOS.php');
+        };
+
         loadPath(''); 
     </script>
-
 </body>
 </html>
