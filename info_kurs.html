@@ -395,7 +395,7 @@
                     // if we're inside the Datenbanken folder (path includes "Datenbanken") and it's a file
                     if (item.type === 'file' && currentPath.toLowerCase().includes('datenbanken')) {
                         icon = '⬇️';
-                        label = '';
+                        // keep filename in label (as requested)
                         // set download link to raw GitHub url
                         btn.setAttribute('href', `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${item.path}`);
                         btn.setAttribute('download', item.name);
