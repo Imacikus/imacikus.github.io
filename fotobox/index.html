@@ -2,23 +2,27 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Fotobox 10c - Premium Edition</title>
+    <title>Fotobox Schulsommerfest 10c</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent: #00f2fe;
-            --accent-glow: rgba(0, 242, 254, 0.4);
-            --glass: rgba(255, 255, 255, 0.08);
-            --glass-strong: rgba(255, 255, 255, 0.15);
+            --accent: #ff9a3c;
+            --accent-glow: rgba(255, 154, 60, 0.35);
+            --glass: rgba(255, 255, 255, 0.12);
+            --glass-strong: rgba(255, 255, 255, 0.2);
+            --bg-1: #ffecd2;
+            --bg-2: #fcb69f;
+            --text: #874f00;
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
             font-family: 'Inter', sans-serif;
-            background: #0a0a12; color: white; overflow: hidden;
+            background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
+            color: var(--text); overflow: hidden;
         }
 
-        .bg-animate { position: fixed; inset: 0; background: linear-gradient(45deg, #0f0c29, #24243e); z-index: -2; }
+        .bg-animate { position: fixed; inset: 0; background: radial-gradient(circle at top left, rgba(255,255,255,0.6), transparent 35%), radial-gradient(circle at bottom right, rgba(255,153,60,0.3), transparent 30%), linear-gradient(135deg, var(--bg-1), var(--bg-2)); z-index: -2; }
         .screen { display: none; position: absolute; inset: 0; flex-direction: column; align-items: center; justify-content: center; }
         .active { display: flex; animation: fadeIn 0.5s; }
 
@@ -26,35 +30,37 @@
 
         /* Kamera-Menü oben rechts */
         #admin-menu { position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; }
-        .cam-select { background: var(--glass-strong); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px; border-radius: 12px; display: none; margin-top: 10px; outline: none; }
-        .gear-icon { font-size: 24px; cursor: pointer; opacity: 0.5; transition: 0.3s; }
+        .cam-select { background: var(--glass-strong); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.12); color: var(--text); padding: 10px; border-radius: 12px; display: none; margin-top: 10px; outline: none; }
+        .gear-icon { font-size: 26px; cursor: pointer; opacity: 0.75; transition: 0.3s; }
 
         /* Booth Layout */
         .booth-container { display: flex; gap: 30px; width: 95vw; height: 80vh; align-items: stretch; justify-content: center; }
-        #cam-area { flex-grow: 1; position: relative; border-radius: 40px; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); background: black; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        #cam-area { flex-grow: 1; position: relative; border-radius: 40px; overflow: hidden; border: 2px dashed rgba(255,255,255,0.35); background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0)); box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
         video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 
-        #sidebar { width: 200px; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); border-radius: 40px; display: flex; flex-direction: column; gap: 15px; padding: 20px; overflow-y: auto; align-items: center; }
-        .sidebar-thumb { width: 100%; border-radius: 15px; border: 2px solid var(--accent); animation: slideIn 0.4s ease-out; }
+        #sidebar { width: 220px; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.1); border-radius: 40px; display: flex; flex-direction: column; gap: 15px; padding: 20px; overflow-y: auto; align-items: center; }
+        .sidebar-thumb { width: 100%; border-radius: 18px; border: 2px solid rgba(255,154,60,0.75); animation: slideIn 0.4s ease-out; }
 
         @keyframes slideIn { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         #countdown { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 15rem; font-weight: 900; text-shadow: 0 0 40px var(--accent); }
 
         /* Glass Cards & Buttons */
-        .glass-card { background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); border-radius: 40px; padding: 3rem; text-align: center; position: relative; }
+        .glass-card { background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(0,0,0,0.08); border-radius: 40px; padding: 3rem; text-align: center; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
         
         .btn-mode { 
-            width: 200px; padding: 30px 10px; cursor: pointer; border-radius: 30px; 
-            transition: 0.3s; margin: 10px; border: 1px solid rgba(255,255,255,0.1);
+            width: 220px; padding: 28px 18px; cursor: pointer; border-radius: 30px; 
+            transition: 0.3s; margin: 10px; border: 1px solid rgba(0,0,0,0.08);
             display: flex; flex-direction: column; align-items: center; gap: 5px;
+            background: rgba(255,255,255,0.7);
+            color: var(--text);
         }
-        .btn-mode:hover { border-color: var(--accent); transform: translateY(-10px); background: var(--glass-strong); }
-        
+        .btn-mode:hover { border-color: rgba(255,154,60,0.9); transform: translateY(-10px); background: rgba(255,255,255,0.9); }
+
         /* Bestseller Highlight */
         .btn-mode.highlight {
             border: 2px solid var(--accent);
-            background: rgba(0, 242, 254, 0.05);
+            background: rgba(255,154,60,0.2);
             box-shadow: 0 0 30px var(--accent-glow);
             transform: scale(1.05);
         }
@@ -67,24 +73,24 @@
             position: absolute;
             top: -15px;
             background: var(--accent);
-            color: #0a0a12;
-            padding: 5px 15px;
+            color: #fff;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 900;
             letter-spacing: 1px;
             text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+            box-shadow: 0 6px 20px rgba(255,154,60,0.4);
         }
 
         .price-tag {
             font-weight: 900; color: var(--accent); font-size: 1.5rem; margin-top: 10px;
-            background: rgba(0, 242, 254, 0.15); padding: 5px 20px; border-radius: 15px;
-            border: 1px solid rgba(0, 242, 254, 0.3);
+            background: rgba(255,154,60,0.15); padding: 5px 18px; border-radius: 15px;
+            border: 1px solid rgba(255,154,60,0.35);
         }
 
-        .id-display { font-size: 5rem; font-weight: 900; color: var(--accent); margin-bottom: 20px; letter-spacing: 10px; }
-        .btn-save { padding: 20px 50px; border-radius: 100px; border: none; background: var(--accent); font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .id-display { font-size: 4.5rem; font-weight: 900; color: var(--accent); margin-bottom: 20px; letter-spacing: 8px; }
+        .btn-save { padding: 20px 50px; border-radius: 100px; border: none; background: var(--accent); color: #fff; font-weight: bold; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -97,15 +103,16 @@
     </div>
 
     <div id="screen-start" class="screen active">
-        <h1 style="letter-spacing: 10px; font-weight: 900; margin-bottom: 40px;">FOTOBOX 10C</h1>
-        <div style="display: flex; align-items: center;">
+        <h1 style="letter-spacing: 8px; font-weight: 900; margin-bottom: 20px;">SCHULSOMMERFEST FOTOBOX</h1>
+        <p style="max-width: 600px; opacity: 0.85; margin-bottom: 20px; font-size: 1rem;">Halte deinen Sommerfest-Moment fest! Wähle dein Format und lass dich in einer bunten Foto-Session ablichten.</p>
+        <div style="display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 18px;">
             <div class="glass-card btn-mode" onclick="startBooth(1)">
                 <h2>1er</h2><p>Einzelbild</p>
-                <div class="price-tag">1€</div>
+                <div class="price-tag">1,50€</div>
             </div>
 
             <div class="glass-card btn-mode highlight" onclick="startBooth(3)">
-                <div class="badge">Bestseller</div>
+                <div class="badge">Top</div>
                 <h2>3er</h2><p>Streifen</p>
                 <div class="price-tag">2€</div>
             </div>
@@ -130,9 +137,10 @@
     <div id="screen-result" class="screen">
         <div class="glass-card">
             <div id="result-container" style="display:none;"></div>
-            <div style="opacity: 0.6; text-transform: uppercase; letter-spacing: 2px;">Deine Nummer</div>
+            <div style="opacity: 0.7; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">Fotobox ID</div>
             <div class="id-display" id="photo-id-text">----</div>
-            <button class="btn-save" onclick="downloadCollage()">Speichern & Beenden</button>
+            <button class="btn-save" onclick="downloadCollage()">Foto speichern</button>
+            <p style="opacity: 0.75; margin-top: 18px; font-size: 0.95rem;">Danke fürs Mitmachen beim Schulsommerfest! Dein Foto wird gleich heruntergeladen.</p>
         </div>
     </div>
 
