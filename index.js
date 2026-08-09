@@ -1,6 +1,6 @@
 const PROJECTS = [
     { id: 1, title: "Borin AI", description: "KI-Sprachmodell für Schüler von Schülern. Ein innovatives Tool, das komplexe Schulthemen verständlich erklärt und beim Lernen unterstützt.", tags: ["AI","Education","Frontend"], link: "https://borinai.github.io" },
-    { id: 2, title: "Coming Soon", description: "Ein neues Projekt ist in der Konzeptionsphase. Hier wird bald etwas Spannendes entstehen.", tags: ["Development"], link: "#" },
+    { id: 2, title: "Open Fog", description: "Reveal the world map by traveling. GPS-basierte Erkundungs-App, die die Weltkarte unter einem Nebel verbirgt und nach und nach freischaltet, während du dich bewegst.", tags: ["Development","Android","App"], link: "https://github.com/imacikus/openfog/" },
     { id: 3, title: "Coming Soon", description: "Hier werden kommende Projekte präsentiert. Bleib auf dem Laufenden!", tags: ["Design"], link: "#" }
 ];
 
