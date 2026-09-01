@@ -1,10 +1,19 @@
 ---
-title: "Wie ich mit Grit den Überblick über meine Projekte und Gewohnheiten behalte"
+title: Wie ich mit Grit den Überblick über meine Projekte und Gewohnheiten behalte
 published: 2026-06-14
-description: "Grit ist eine Open-Source-App, die mir hilft, Projekte und Gewohnheiten ohne Ballast zu managen – minimalistisch und effektiv."
-tags: ["Grit", "Produktivität", "OpenSource", "HabitTracker", "Todo"]
-category: "Produktivität & Tools"
+description: Grit ist eine Open-Source-App, die mir hilft, Projekte und Gewohnheiten ohne Ballast zu managen – minimalistisch und effektiv.
+tags:
+    - Grit
+    - Produktivität
+    - OpenSource
+    - HabitTracker
+    - Todo
+category: Produktivität & Tools
 draft: false
+keywords:
+    - Habittracker
+    - OpenSource
+slug: wie-ich-mit-grit-den-uberblick-uber-meine-projekte-und-gewohnheiten-behalte
 ---
 
 Ich kenne das Problem nur zu gut: Man arbeitet gleichzeitig an mehreren Projekten – sei es Programmieren, Videos schneiden oder andere Aufgaben – und verliert schnell den Überblick. Dazu kommt noch der Wunsch, meine Gewohnheiten im Blick zu behalten oder neue aufzubauen. Bisher hatte ich dafür zeitweise bis zu drei verschiedene Apps auf meinem Smartphone. Überraschenderweise hat das sogar ein paar Wochen funktioniert, doch irgendwann war der Überblick wieder weg.
