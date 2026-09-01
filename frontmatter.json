@@ -63,5 +63,7 @@
         }
       ]
     }
-  ]
+  ],
+  "frontMatter.dashboard.openOnStart": false,
+  "frontMatter.git.enabled": true
 }
