@@ -61,7 +61,7 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "/avatar_no_bg.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+	avatar: "/avatar_no_bg.svg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "Imacikus",
 	bio: "Digital Creator · Entwickler von Borin AI · Blog über Technik, Politik & die digitale Transformation.",
 	links: [
