@@ -1,6 +1,6 @@
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
-import tailwind from "@astrojs/tailwind";
+import { unified } from "@astrojs/markdown-remark";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import swup from "@swup/astro";
@@ -24,15 +24,64 @@ import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
 
+const remarkPlugins = [
+	remarkMath,
+	remarkReadingTime,
+	remarkExcerpt,
+	remarkGithubAdmonitionsToDirectives,
+	remarkDirective,
+	remarkSectionize,
+	parseDirectiveNode,
+];
+
+const rehypePlugins = [
+	rehypeKatex,
+	rehypeSlug,
+	[
+		rehypeComponents,
+		{
+			components: {
+				github: GithubCardComponent,
+				note: (x, y) => AdmonitionComponent(x, y, "note"),
+				tip: (x, y) => AdmonitionComponent(x, y, "tip"),
+				important: (x, y) => AdmonitionComponent(x, y, "important"),
+				caution: (x, y) => AdmonitionComponent(x, y, "caution"),
+				warning: (x, y) => AdmonitionComponent(x, y, "warning"),
+			},
+		},
+	],
+	[
+		rehypeAutolinkHeadings,
+		{
+			behavior: "append",
+			properties: {
+				className: ["anchor"],
+			},
+			content: {
+				type: "element",
+				tagName: "span",
+				properties: {
+					className: ["anchor-icon"],
+					"data-pagefind-ignore": true,
+				},
+				children: [
+					{
+						type: "text",
+						value: "#",
+					},
+				],
+			},
+		},
+	],
+];
+
 // https://astro.build/config
 export default defineConfig({
 	site: "https://imacikus.github.io/",
 	base: "/",
 	trailingSlash: "always",
+	compressHTML: true,
 	integrations: [
-		tailwind({
-			nesting: true,
-		}),
 		swup({
 			theme: false,
 			animationClass: "transition-swup-", // see https://swup.js.org/options/#animationselector
@@ -49,7 +98,6 @@ export default defineConfig({
 		}),
 		icon({
 			include: {
-				"preprocess: vitePreprocess(),": ["*"],
 				"fa6-brands": ["*"],
 				"fa6-regular": ["*"],
 				"fa6-solid": ["*"],
@@ -103,55 +151,7 @@ export default defineConfig({
 		sitemap(),
 	],
 	markdown: {
-		remarkPlugins: [
-			remarkMath,
-			remarkReadingTime,
-			remarkExcerpt,
-			remarkGithubAdmonitionsToDirectives,
-			remarkDirective,
-			remarkSectionize,
-			parseDirectiveNode,
-		],
-		rehypePlugins: [
-			rehypeKatex,
-			rehypeSlug,
-			[
-				rehypeComponents,
-				{
-					components: {
-						github: GithubCardComponent,
-						note: (x, y) => AdmonitionComponent(x, y, "note"),
-						tip: (x, y) => AdmonitionComponent(x, y, "tip"),
-						important: (x, y) => AdmonitionComponent(x, y, "important"),
-						caution: (x, y) => AdmonitionComponent(x, y, "caution"),
-						warning: (x, y) => AdmonitionComponent(x, y, "warning"),
-					},
-				},
-			],
-			[
-				rehypeAutolinkHeadings,
-				{
-					behavior: "append",
-					properties: {
-						className: ["anchor"],
-					},
-					content: {
-						type: "element",
-						tagName: "span",
-						properties: {
-							className: ["anchor-icon"],
-							"data-pagefind-ignore": true,
-						},
-						children: [
-							{
-								type: "text",
-								value: "#",
-							},
-						],
-					},
-				},
-			],
-		],
+		processor: unified({ remarkPlugins, rehypePlugins }),
 	},
 	vite: {
 		build: {

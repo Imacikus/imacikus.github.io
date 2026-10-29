@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "Portfolio & Blog",
 	lang: "de", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
 	themeColor: {
-		hue: 188, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 188, pink: 345
+		hue: 60, // Default hue for the theme color, from 0 to 360.
 		fixed: true, // Hide the theme color picker for visitors
 	},
 	banner: {
